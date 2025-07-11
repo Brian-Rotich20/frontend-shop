@@ -18,10 +18,10 @@
         "name": "next"
       }
     ],
-    "paths": {
-      "@/*": ["./*"]
-    }
+   "paths": {
+    "@/*": ["./app/*"]
+  }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts", "app/page.jsx", "app/layout.jsx", "app/products/[productId]/page.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx","app/context",".next/types/**/*.ts", "app/page.jsx", "app/layout.jsx", "app/products/[slug]/page.jsx"],
   "exclude": ["node_modules"]
 }

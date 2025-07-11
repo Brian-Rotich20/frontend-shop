@@ -7,48 +7,48 @@
 //3️⃣ Calls a placeholder API for now → you’ll replace with your real Django API URL
 
 // import Categories from "@/components/categories/Categories" - This would be used in fetching categories in the main page
-'use client' 
+import CategoryCard from './CategoryCard';
 
-import { useEffect, useState } from 'react'
-import CategoryCard from './CategoryCard'
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-export default function Categories() {
-  const [categories, setCategories] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
+async function getCategories() {
+ const res = await fetch(`${BASE_URL}/category_list`, {
+    cache: 'no-store',
+  });
+  if (!res.ok) throw new Error('Failed to fetch categories');
+  const data = await res.json();
+  return data.map(cat => ({
+    id: cat.id,
+    name: cat.name,
+    slug: cat.slug,
+    image: `${BASE_URL}${cat.image}`,
+  }));
+}
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await fetch('https://django-shop-drf-production.up.railway.app/category_list')
-        if (!res.ok) throw new Error('Failed to fetch categories')
-        const data = await res.json()
-        const formatted = data.map(cat => ({
-          id: cat.id,
-          name: cat.name,
-          slug: cat.slug,
-          image: `https://django-shop-drf-production.up.railway.app${cat.image}`,
-        }))
-        setCategories(formatted)
-      } catch (err) {
-        setError(err.message)
-      } finally {
-        setLoading(false)
-      }
-    }
-    fetchCategories()
-  }, [])
+export default async function Categories() {
+  let categories = [];
 
-  if (loading) return <p className="text-center py-6 text-gray-600">Loading categories...</p>
-  if (error) return <p className="text-center py-6 text-red-500">{error}</p>
+  try {
+    categories = await getCategories();
+  } catch (error) {
+    return (
+      <p className="text-center py-6 text-red-500">
+        {error.message || 'Something went wrong'}
+      </p>
+    );
+  }
 
-  return (
-    <section className="py-10 bg-gray-50">
-      <div className="max-w-7xl mx-auto px-4 grid gap-6 grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+return (
+  <section className="py-10 bg-gray-50">
+    <div className="w-full px-4">
+      <div className="flex gap-3 w-full">
         {categories.map((category) => (
-          <CategoryCard key={category.id} category={category} />
+          <div key={category.id} className="flex-1 min-w-0">
+            <CategoryCard category={category} />
+          </div>
         ))}
       </div>
-    </section>
-  )
+    </div>
+  </section>
+);
 }

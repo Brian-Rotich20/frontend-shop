@@ -1,0 +1,111 @@
+1. Project Setup
+Create Next.js App (with App Router):
+npx create-next-app@latest your-shop --app
+Install Tailwind CSS:
+npm install -D tailwindcss postcss autoprefixer && npx tailwindcss init -p
+Configure tailwind.config.js & globals.css
+
+
+
+🛠️ 2. Global Layout & Components
+Create:
+Header (logo, search, cart icon, account)
+Footer (links, copyright)
+Navbar (categories)
+Container wrapper for padding/layout
+Loader, Button, Card, etc.
+
+
+
+📦 3. Fetch & Display Products
+Home Page:
+Fetch featured or latest products from your Django API.
+Use ProductCard component.
+Product Listing Pages:
+/products/: All products.
+/category/[slug]/: Filtered by category.
+Product Detail Page:
+/product/[id]/: Show name, image, price, description, etc.
+
+
+
+🧭 4. Category Pages
+Fetch all categories on load.
+Link each category to /category/[slug] with filtered product display.
+
+
+🛒 5. Cart System
+Store cart in localStorage or global state (e.g., context, Zustand).
+Cart functions:
+Add to cart
+Remove from cart
+Update quantity
+Cart drawer/page /cart:
+List items
+Show subtotal
+Checkout button
+
+
+
+👤 6. User Authentication
+Pages: /login, /register, /profile
+Use Django token-based auth or session.
+Store auth token in cookie or localStorage.
+Protect routes: /checkout, /orders, /profile
+
+
+
+📦 7. Checkout Page
+/checkout:
+Show cart summary
+Collect shipping info
+Choose payment: Stripe / M-Pesa
+
+
+
+💳 8. Payment Integration
+Stripe (Card)
+Use Stripe.js and React Stripe Element
+Create payment intent from backend
+Confirm payment on frontend
+M-Pesa:
+User enters phone number
+Trigger STK push via Django backend
+Wait for confirmation (webhook/response)
+
+
+
+
+📄 9. Order Summary Page
+After payment:
+Show order summary: products, total, shipping
+Save order in backend (via POST to Django)
+Route: /order/[id]/
+
+
+
+🧾 10. My Orders Page
+/orders (for logged-in user):
+Fetch orders from Django
+Show status (Pending, Paid, Shipped)
+
+
+
+🛍️ 11. Admin Panel (Optional Frontend)
+Product Management: Add, Edit, Delete
+Order Management: Update status
+You can use Django Admin, but a frontend version is optional
+
+
+🎯 12. SEO + Responsiveness + PWA
+Set meta tags per page
+Make layout mobile-first (Tailwind responsive)
+Optional: Add PWA config for installable experience
+
+
+
+✅ 13. Testing and Deployment
+Test all flows: Browse → Cart → Login → Checkout → Payment → Order
+Deploy frontend (Vercel) & backend (Railway/Render)
+
+

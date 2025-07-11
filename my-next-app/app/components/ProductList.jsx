@@ -1,16 +1,23 @@
-// section to show products
-
 import ProductCard from './ProductCard';
-
+import Link from 'next/link';
 export default function ProductList({ products }) {
-  return (
-    <section className="max-w-6xl mx-auto p-6">
-      <h1 className="text-4xl font-bold mb-4">Products</h1>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {products.map((product) => (
-          <ProductCard key={product.id} product={product} />
-        ))}
+   
+
+  
+  if (!products || products.length === 0) {
+    return (
+      <div className="text-center py-8">
+        <p className="text-gray-500">No products available.</p>
       </div>
-    </section>
-  );
-}
+    );
+  }
+
+  return (
+    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3 sm:gap-4">
+      {products.map((product) => (
+      <Link key={product.id} href={`/products/${product.id}`}>
+        <ProductCard product={product} />
+      </Link>
+       ))}
+    </div>
+  );}
