@@ -3,27 +3,23 @@ import { useEffect, useState } from 'react'
 import { useRouter } from "next/navigation"
 import { useCart } from '../context/CartContext' 
 import { ShoppingBag, Minus, Plus, X } from 'lucide-react'
+import { useSession } from "next-auth/react";
 
 export default function CartPage() {
+  const {  status } = useSession();
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const { refreshCart } = useCart();
   const router = useRouter();
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
-  const getImageUrl = (imagePath) => {
-    if (!imagePath) return null;
-    
-    if (imagePath.startsWith('http')) {
-      return imagePath;
-    }
-    
-    if (imagePath.startsWith('/media/')) {
-      return `https://django-shop-drf.onrender.com${imagePath}`;
-    }
-    
-    return `https://django-shop-drf.onrender.com/${imagePath}`;
-  };
+const getImageUrl = (imagePath) => {
+  const cloudinaryBaseUrl = process.env.NEXT_PUBLIC_CLOUDINARY_API_BASE_URL;
+  if (!imagePath) return '/fallback.jpg'; 
+  if (imagePath.startsWith('http')) return imagePath;
+  return `${cloudinaryBaseUrl}/${imagePath}`;
+};
 
   const getCartCode = () => {
     if (typeof window !== 'undefined') {
@@ -42,10 +38,10 @@ export default function CartPage() {
           return;
         }
 
-        const res = await fetch(`https://django-shop-drf.onrender.com/get_cart/${cartCode}`);
+        const res = await fetch(`${baseUrl}/get_cart/${cartCode}`);
         const data = await res.json();
 
-        console.log("🛒 Cart response:", data);
+        console.log("Cart response:", data);
 
         if (res.ok) {
           setCart(data);
@@ -68,7 +64,7 @@ export default function CartPage() {
 
     try {
       const cartCode = getCartCode();
-      const res = await fetch('https://django-shop-drf.onrender.com/update_cartitem_quantity/', {
+      const res = await fetch(`${baseUrl}/update_cartitem_quantity/`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -79,8 +75,7 @@ export default function CartPage() {
       });
 
       if (res.ok) {
-        // Refresh cart data with updated URL
-        const cartRes = await fetch(`https://django-shop-drf.onrender.com/get_cart/${cartCode}`);
+        const cartRes = await fetch(`${baseUrl}/get_cart/${cartCode}`);
         const updatedCart = await cartRes.json();
         setCart(updatedCart);
         refreshCart(); // Update cart count in context
@@ -97,7 +92,7 @@ export default function CartPage() {
   const removeItem = async (itemId) => {
     try {
       const cartCode = getCartCode();
-      const res = await fetch(`https://django-shop-drf.onrender.com/delete_cartitem/${itemId}/`, {
+      const res = await fetch(`${baseUrl}/delete_cartitem/${itemId}/`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -106,7 +101,7 @@ export default function CartPage() {
       });
 
       if (res.ok) {
-        const cartRes = await fetch(`https://django-shop-drf.onrender.com/get_cart/${cartCode}`);
+        const cartRes = await fetch(`${baseUrl}/get_cart/${cartCode}`);
         const updatedCart = await cartRes.json();
         setCart(updatedCart);
         refreshCart(); 
@@ -125,7 +120,16 @@ export default function CartPage() {
     router.push("/checkout");
   };
 
-  if (loading) return <div className="p-4 text-gray-600">Loading cart...</div>;
+  if (status === "loading" || loading) {
+  return (
+    <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
+        <p className="text-gray-600">Loading...</p>
+      </div>
+    </div>
+  );
+}
   if (error) return <div className="p-4 text-red-600">Error: {error}</div>;
   if (!cart) return <div className="p-4">Cart not found</div>;
 

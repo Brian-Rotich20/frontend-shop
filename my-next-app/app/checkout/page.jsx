@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useState } from "react";
 import { useCart } from '../context/CartContext';
 import { ShoppingBag, User, MapPin, CreditCard, Lock } from 'lucide-react';
+import { useToast } from '@/components/ToastProvider';
 
 export default function CheckoutPage() {
   const { data: session, status } = useSession();
@@ -15,6 +16,7 @@ export default function CheckoutPage() {
   const [error, setError] = useState(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [phone, setPhone] = useState("");
+  const { showToast } = useToast();
 
 
   const getCartCode = () => {
@@ -78,40 +80,70 @@ const handlePlaceOrder = async () => {
   }
 
   setIsProcessing(true);
-  
+  showToast({ status: "processing", message: "Sending STK push..." });
+
 try {
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/lipa_na_mpesa/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ phone, cart_code: cartCode }),
+    body: JSON.stringify({ 
+      phone, 
+      cart_code: cartCode,
+      email: session?.user?.email 
+    }),
   });
 
   const isJson = res.headers.get("content-type")?.includes("application/json");
   const data = isJson ? await res.json() : null;
 
-  if (!res.ok) {
-    console.error("Server error:", data);
-    alert(data?.error || "Payment failed. Please try again.");
+  if (!res.ok || data?.error) {
+    showToast({ status: "error", message: "Payment failed. Try again." });
     return;
   }
 
-  if (data?.ResponseCode === "0") {
-    alert("M-Pesa STK Push sent! Complete payment on your phone.");
-    localStorage.removeItem("cart_code");
-    refreshCart();
-    router.push("/order-success");
+  if (data.ResponseCode === "0") {
+    showToast({ status: "awaiting", message: "STK Push sent. Awaiting user action..." });
+
+    pollPaymentStatus(cartCode); // 🔁 Add polling below
   } else {
-    console.error("STK Error:", data);
-    alert("Payment failed. Please try again.");
+    showToast({ status: "error", message: "STK Push failed." });
   }
 } catch (err) {
-  console.error("Checkout error:", err);
-  alert("An error occurred during checkout.");
+  showToast({ status: "error", message: "Checkout failed." });
 } finally {
-    setIsProcessing(false);
+  setIsProcessing(false);
   }
 };
 
+const pollPaymentStatus = async (cartCode) => {
+  let retries = 0;
+  const maxRetries = 12; // ~2 mins
+
+  const interval = setInterval(async () => {
+    try {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/payment_status?cart_code=${cartCode}`);
+      const data = await res.json();
+
+      if (data.status === "Paid") {
+        clearInterval(interval);
+        showToast({ status: "success", message: "Payment successful!" });
+        localStorage.removeItem("cart_code");
+        refreshCart();
+        router.push("/order-success");
+      }
+
+      if (data.status === "Declined" || retries >= maxRetries) {
+        clearInterval(interval);
+        showToast({ status: "error", message: "Payment declined or timed out." });
+      }
+
+      retries++;
+    } catch (err) {
+      clearInterval(interval);
+      showToast({ status: "error", message: "Error checking payment status." });
+    }
+  }, 10000); // every 10 seconds
+};
 
   if (status === "loading" || loading) {
     return (

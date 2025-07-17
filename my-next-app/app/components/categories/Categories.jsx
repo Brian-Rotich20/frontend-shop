@@ -10,18 +10,24 @@
 import CategoryCard from './CategoryCard';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const CLOUDINARY_URL = process.env.NEXT_PUBLIC_CLOUDINARY_API_BASE_URL
 
 async function getCategories() {
- const res = await fetch(`${BASE_URL}/category_list`, {
+  const res = await fetch(`${BASE_URL}/category_list`, {
     cache: 'no-store',
   });
+
   if (!res.ok) throw new Error('Failed to fetch categories');
+  
   const data = await res.json();
+
   return data.map(cat => ({
     id: cat.id,
     name: cat.name,
     slug: cat.slug,
-    image: `${BASE_URL}${cat.image}`,
+    image: cat.image?.startsWith('http')
+      ? cat.image
+      : `${CLOUDINARY_URL}/${cat.image}`,
   }));
 }
 

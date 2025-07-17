@@ -5,6 +5,7 @@ import ProductList from './components/ProductList';
 
 
 async function getAllProducts() {
+  // const baseUrl = process.env.NEXT_PUBLIC_API_URL;
   const res = await fetch('https://django-shop-drf.onrender.com/product_list', {
     cache: 'no-store',
   });

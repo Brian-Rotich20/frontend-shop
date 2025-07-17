@@ -8,20 +8,12 @@ export default function ProductCard({ product }) {
   const { refreshCart, getOrCreateCartCode } = useCart();
   const [imageError, setImageError] = useState(false);
 
-  const getImageUrl = (imagePath) => {
-    if (!imagePath) return null;
-    
-    if (imagePath.startsWith('http')) {
-      return imagePath;
-    }
-    
-    if (imagePath.startsWith('/media/')) {
-      return `https://django-shop-drf.onrender.com${imagePath}`;
-    }
-   
-    return `https://django-shop-drf.onrender.com/${imagePath}`;
-  };
-
+const getImageUrl = (imagePath) => {
+  const cloudinaryBaseUrl = process.env.NEXT_PUBLIC_CLOUDINARY_API_BASE_URL;
+  if (!imagePath) return '/fallback.jpg';
+  if (imagePath.startsWith('http')) return imagePath;
+  return `${cloudinaryBaseUrl}/${imagePath}`;
+};
 
   const addToCart = async (productId, quantity = 1) => {
     try {
