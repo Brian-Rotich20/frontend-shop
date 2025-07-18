@@ -1,5 +1,5 @@
 //products list
-import ProductList from '@/app/components/ProductList';
+import ProductList from './components/ProductList';
 
 
 async function getProducts() {
