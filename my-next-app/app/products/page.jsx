@@ -1,5 +1,5 @@
 //products list
-import ProductList from './components/ProductList';
+import ProductList from '../components/ProductList';
 
 async function getProducts() {
   const res = await fetch('https://django-shop-drf.onrender.com/product_list',  {
