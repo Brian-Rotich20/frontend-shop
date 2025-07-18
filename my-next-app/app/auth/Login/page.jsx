@@ -1,10 +1,12 @@
 'use client';
+
 import { signIn } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 
-export const dynamic = "force-dynamic";
-export default function LoginPage() {
+export const dynamic = 'force-dynamic';
+
+function LoginForm() {
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
@@ -16,7 +18,7 @@ export default function LoginPage() {
 
     const res = await signIn("credentials", {
       redirect: false,
-      username: emailOrPhone, 
+      username: emailOrPhone,
       password,
     });
 
@@ -50,5 +52,13 @@ export default function LoginPage() {
         <a href="/auth/register" className="text-blue-500 underline">Register</a>
       </p>
     </form>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div>Loading login...</div>}>
+      <LoginForm />
+    </Suspense>
   );
 }
