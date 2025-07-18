@@ -52,7 +52,6 @@ export default function AddToCartButton({ productId, className = "" }) {
       setMessage('Network error. Please try again.');
     } finally {
       setLoading(false);
-      // Clear message after 3 seconds
       setTimeout(() => setMessage(''), 3000);
     }
   };

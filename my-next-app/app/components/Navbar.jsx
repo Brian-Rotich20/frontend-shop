@@ -29,7 +29,7 @@ export default function ProfessionalNavbar() {
     });
   };
   return (
-    <header className="bg-white shadow-lg sticky top-0 z-50">
+    <header className="bg-white shadow-lg sticky top-0 z-50 w-full">
    
       {/* Main navbar */}
       <div className="container mx-auto px-4">

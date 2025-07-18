@@ -17,7 +17,7 @@ export default async function Homepage() {
   const products = await getAllProducts();
 
   return (
-    <main className="min-h-screen bg-white text-gray-900">
+    <main className="min-h-screen bg-white text-gray-900 overflow-x-hidden ">
     
       <Hero />
       <Categories />
