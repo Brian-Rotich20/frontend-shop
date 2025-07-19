@@ -119,8 +119,10 @@ export default function CartPage() {
 
 const handleCheckout = () => {
   if (status !== 'authenticated') {
-    toast.error('Redirecting to login...');
-    signIn(undefined, { callbackUrl: '/checkout' }); // this auto redirects to login, then back to /checkout
+    toast.error('You must be logged in to proceed to checkout');
+
+    // manually redirect to your custom login page
+    router.push(`/auth/login?next=/checkout`);
     return;
   }
   router.push('/checkout');
