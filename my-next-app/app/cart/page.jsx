@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation"
 import { useCart } from '../context/CartContext' 
 import { ShoppingBag, Minus, Plus, X, ArrowLeft } from 'lucide-react'
 import { useSession } from "next-auth/react";
+import toast from 'react-hot-toast';
 
 export default function CartPage() {
   const {  status } = useSession();
@@ -113,9 +114,14 @@ export default function CartPage() {
     }
   };
 
-  const handleCheckout = () => {
-    router.push("/checkout");
-  };
+ const handleCheckout = () => {
+  if (status !== 'authenticated') {
+    toast.error('You must be logged in to proceed to checkout');
+    router.push('/auth/login');
+    return;
+  }
+  router.push('/checkout');
+};
 
   if (status === "loading" || loading) {
     return (
