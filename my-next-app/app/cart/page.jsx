@@ -5,6 +5,7 @@ import { useCart } from '../context/CartContext'
 import { ShoppingBag, Minus, Plus, X, ArrowLeft } from 'lucide-react'
 import { useSession } from "next-auth/react";
 import toast from 'react-hot-toast';
+import { signIn } from 'next-auth/react';
 
 export default function CartPage() {
   const {  status } = useSession();
@@ -114,18 +115,17 @@ export default function CartPage() {
     }
   };
 
- const handleCheckout = () => {
+
+
+const handleCheckout = () => {
   if (status !== 'authenticated') {
-    toast.error('You must be logged in to proceed to checkout');
-
-    setTimeout(() => {
-      router.push('/auth/login');
-    }, 1500); // wait 1.5 seconds before redirecting
-
+    toast.error('Redirecting to login...');
+    signIn(undefined, { callbackUrl: '/checkout' }); // this auto redirects to login, then back to /checkout
     return;
   }
   router.push('/checkout');
 };
+
   if (status === "loading" || loading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
