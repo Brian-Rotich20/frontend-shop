@@ -2,7 +2,7 @@
 import Hero from './components/Hero';
 import Categories from './components/categories/Categories';
 import ProductList from './components/ProductList';
-import global from './globals.css';
+
 
 async function getAllProducts() {
   // const baseUrl = process.env.NEXT_PUBLIC_API_URL;

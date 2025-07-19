@@ -1,5 +1,8 @@
-// app/categories/[slug]/page.jsx
-import Link from 'next/link';
+'use client';
+
+import { useEffect, useState } from 'react';
+import AddReviewForm from '@/components/AddReviewForm';
+import ProductRatingStars from '@/components/ProductRatingStars';
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 const CLOUDINARY_BASE_URL = process.env.NEXT_PUBLIC_CLOUDINARY_API_BASE_URL;
@@ -10,66 +13,73 @@ const getImageUrl = (imagePath) => {
   return `${CLOUDINARY_BASE_URL}/${imagePath}`;
 };
 
-async function getCategory(slug) {
-  const res = await fetch(`${BASE_URL}/categories/${slug}`, {
-    cache: 'no-store',
-  });
+export default function ProductDetailPage({ params }) {
+  const [product, setProduct] = useState(null);
+  const [reviews, setReviews] = useState([]);
 
-  if (!res.ok) {
-    console.error('Error:', res.status);
-    return null;
+  const productId = params.id;
+
+  const fetchProduct = async () => {
+    const res = await fetch(`${BASE_URL}/products/${productId}`, {
+      cache: 'no-store',
+    });
+    const data = await res.json();
+    setProduct(data);
+  };
+
+  const fetchReviews = async () => {
+    const res = await fetch(`${BASE_URL}/get_reviews/?product_id=${productId}`);
+    const data = await res.json();
+    setReviews(data);
+  };
+
+  useEffect(() => {
+    fetchProduct();
+    fetchReviews();
+  }, [productId]);
+
+  if (!product) {
+    return <p className="text-center text-red-500 py-6">Product not found.</p>;
   }
-
-  return res.json();
-}
-
-export default async function CategoryPage({ params }) {
-  const { slug } = await params; // ✅ await the params Promise
-  const data = await getCategory(slug);
-
-  if (!data) {
-    return <div className="p-6 text-center text-red-600">404 - Category Not Found</div>;
-  }
-
-  const { name, image, products } = data;
 
   return (
-    <main className="p-6">
-      <h1 className="text-3xl font-bold mb-4">{name} Products</h1>
-
-      {image && (
-        <div className="w-40 h-40 rounded overflow-hidden shadow mb-6">
-          <img
-            src={getImageUrl(image)}
-            alt={name}
-            className="w-full h-full object-cover"
-          />
+    <div className="max-w-4xl mx-auto p-6 space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        <img
+          src={getImageUrl(product.image)}
+          alt={product.name}
+          className="w-full h-80 object-cover rounded-lg shadow"
+        />
+        <div>
+          <h1 className="text-2xl font-bold">{product.name}</h1>
+          <p className="text-blue-600 font-semibold text-lg mb-2">Ksh {product.price}</p>
+          <ProductRatingStars productId={product.id} />
+          <p className="text-gray-700 mt-4">{product.description}</p>
         </div>
-      )}
+      </div>
 
-      {products.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-          {products.map((product) => {
-            const imageUrl = getImageUrl(product.image);
-
-            return (
-              <Link href={`/products/${product.id}`} key={product.id}>
-                <div className="border p-4 rounded shadow hover:shadow-lg transition cursor-pointer">
-                  <img
-                    src={imageUrl}
-                    alt={product.name}
-                    className="h-40 w-full object-cover rounded"
-                  />
-                  <h3 className="font-semibold mt-2">{product.name}</h3>
-                  <p className="font-bold text-blue-600">Ksh {product.price}</p>
+      {/* Reviews */}
+      <section>
+        <h2 className="text-xl font-semibold mb-4">Customer Reviews</h2>
+        {reviews.length > 0 ? (
+          <div className="space-y-4">
+            {reviews.map((review) => (
+              <div key={review.id} className="border p-4 rounded bg-white shadow-sm">
+                <div className="flex items-center gap-2 mb-1 text-yellow-500 text-sm">
+                  {'★'.repeat(review.rating)}{'☆'.repeat(5 - review.rating)}
                 </div>
-              </Link>
-            );
-          })}
-        </div>
-      ) : (
-        <p className="text-gray-500">No products found in this category.</p>
-      )}
-    </main>
+                <p className="text-gray-800">{review.review}</p>
+                <p className="text-sm text-gray-500 mt-1">– {review.email}</p>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-gray-500">No reviews yet.</p>
+        )}
+      </section>
+
+      {/* Add Review Form */}
+      <AddReviewForm product={product} refreshReviews={fetchReviews} />
+    </div>
   );
 }

@@ -10,20 +10,19 @@ import { Toaster } from 'react-hot-toast';
 
 export default function RootLayout({ children }) {
   return (
-      <html lang="en">
-        <body>
-          <Toaster position="top-center" />
-          <ToastProvider>
+    <html lang="en">
+      <body className="overflow-x-hidden">
+        <Toaster position="top-center" />
+        <ToastProvider>
           <SessionProvider>
             <CartProvider>
               <Navbar />
               {children}
+              <Footer />
             </CartProvider>
           </SessionProvider>
-          </ToastProvider>
-          <Footer />
-        </body>
-      </html>
-  
+        </ToastProvider>
+      </body>
+    </html>
   );
 }

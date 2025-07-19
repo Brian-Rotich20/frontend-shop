@@ -8,7 +8,7 @@ import ReviewList from './ReviewList';
 import SimilarProducts from './SimilarProducts';
 import WishlistButton from './WishlistButton';
 import { getReviews, getProductRating } from '@/lib/api';
-
+import AddToCartButton from './AddToCartButton';
 export default function ProductDetails({ product }) {
   const [activeTab, setActiveTab] = useState('description');
   const [quantity, setQuantity] = useState(1);
@@ -52,7 +52,7 @@ const fetchRating = async () => {
 
     const getImageUrl = (imagePath) => {
     const cloudinaryBaseUrl = process.env.NEXT_PUBLIC_CLOUDINARY_API_BASE_URL;
-    // if (!imagePath) return '/fallback.jpg';
+     if (!imagePath) return '/fallback.jpg';
     if (imagePath.startsWith('http')) return imagePath;
     return `${cloudinaryBaseUrl}/${imagePath}`;
   }
@@ -119,9 +119,7 @@ const fetchRating = async () => {
 
                 {/* Action Buttons */}
                 <div className="flex space-x-4">
-                  <button className="flex-1 bg-blue-600 text-white py-3 px-6 rounded-lg hover:bg-blue-700 transition-colors font-medium">
-                    Add to Cart
-                  </button>
+                  <AddToCartButton productId={product.id} quantity={quantity} />
                   <WishlistButton productId={product.id} />
                 </div>
               </div>

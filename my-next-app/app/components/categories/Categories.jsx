@@ -43,18 +43,15 @@ export default async function Categories() {
       </p>
     );
   }
-
 return (
-  <section className="py-10 bg-gray-50">
-    <div className="w-full px-4">
-      <div className="flex gap-3 w-full">
-        {categories.map((category) => (
-          <div key={category.id} className="flex-1 min-w-0">
-            <CategoryCard category={category} />
-          </div>
-        ))}
+    <section className="py-10 bg-gray-50">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+          {categories.map((category) => (
+            <CategoryCard key={category.id} category={category} />
+          ))}
+        </div>
       </div>
-    </div>
-  </section>
-);
+    </section>
+  );
 }

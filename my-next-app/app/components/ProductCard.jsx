@@ -2,8 +2,6 @@
 
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { getProductRating } from '@/lib/api';
-import { Star } from 'lucide-react';
 import ProductRatingStars from './ProductRatingStars';
 export default function ProductCard({ product, href }) {
   const [imageError, setImageError] = useState(false);
