@@ -114,15 +114,18 @@ export default function CartPage() {
     }
   };
 
- const handleCheckout = () => {
+onst handleCheckout = () => {
   if (status !== 'authenticated') {
     toast.error('You must be logged in to proceed to checkout');
-    router.push('/auth/login');
+
+    setTimeout(() => {
+      router.push('/auth/login');
+    }, 1500); // wait 1.5 seconds before redirecting
+
     return;
   }
   router.push('/checkout');
 };
-
   if (status === "loading" || loading) {
     return (
       <div className="min-h-screen bg-white flex items-center justify-center">
