@@ -114,7 +114,7 @@ export default function CartPage() {
     }
   };
 
-onst handleCheckout = () => {
+ const handleCheckout = () => {
   if (status !== 'authenticated') {
     toast.error('You must be logged in to proceed to checkout');
 
