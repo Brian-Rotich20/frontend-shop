@@ -53,12 +53,12 @@ const HeroSection = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="relative flex items-center py-4">
             {/* Left Scroll Button */}
-            <button
+            {/* <button
               onClick={() => scrollCategories('left')}
               className="absolute left-4 z-10 p-2 rounded-full bg-white shadow-md border border-gray-200 hover:shadow-lg transition-shadow"
             >
               <ChevronLeft className="w-4 h-4 text-gray-600" />
-            </button>
+            </button> */}
 
             {/* Categories Container */}
             <div
@@ -83,12 +83,12 @@ const HeroSection = () => {
             </div>
 
             {/* Right Scroll Button */}
-            <button
+            {/* <button
               onClick={() => scrollCategories('right')}
               className="absolute right-4 z-10 p-2 rounded-full bg-white shadow-md border border-gray-200 hover:shadow-lg transition-shadow"
             >
               <ChevronRight className="w-4 h-4 text-gray-600" />
-            </button>
+            </button> */}
           </div>
         </div>
       </div>
@@ -116,7 +116,7 @@ const HeroSection = () => {
             </div>
 
             {/* Search Bar */}
-            <div className="relative max-w-md">
+            {/* <div className="relative max-w-md">
               <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
                 <Search className="h-5 w-5 text-gray-400" />
               </div>
@@ -127,7 +127,7 @@ const HeroSection = () => {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900 placeholder-gray-500 shadow-sm"
               />
-            </div>
+            </div> */}
 
             {/* CTA Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
