@@ -30,18 +30,6 @@ export default function CartPage() {
     return null;
   };
 
-  if (status === "unauthenticated") {
-  if (typeof window !== "undefined") {
-    router.push("/auth/login?next=/checkout");
-  }
-
-  return (
-    <div className="min-h-screen bg-white flex items-center justify-center">
-      <p className="text-gray-600 text-sm">Redirecting to login...</p>
-    </div>
-  );
-}
-
   useEffect(() => {
     async function fetchCart() {
       try {
@@ -126,7 +114,6 @@ export default function CartPage() {
       alert('Failed to remove item');
     }
   };
-
 
 
 const handleCheckout = () => {
@@ -296,6 +283,7 @@ const handleCheckout = () => {
                 
                 <button
                   onClick={handleCheckout}
+                  disabled={status ==="loading"}
                   className="w-full bg-blue-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
                   Proceed to Checkout
