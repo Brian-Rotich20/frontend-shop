@@ -124,7 +124,7 @@ export default function CartPage() {
     if (status === 'unauthenticated' || !session) {
       toast.error('You must be logged in to proceed to checkout');
       
-      router.push(`/auth/login?next=${encodeURIComponent('/cart')}`);
+      router.push(`/login?next=${encodeURIComponent('/cart')}`);
       return;
     }
     
