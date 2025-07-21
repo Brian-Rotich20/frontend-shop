@@ -121,7 +121,7 @@ function LoginForm() {
         <p className="text-sm text-center text-gray-600 mt-4">
           Don't have an account?{' '}
           <button
-            onClick={() => router.push(`/register?next=${encodeURIComponent(next)}`)}
+            onClick={() => router.push(`/auth/register?next=${encodeURIComponent(next)}`)}
             className="text-blue-600 hover:underline"
           >
             Create one

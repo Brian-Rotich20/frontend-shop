@@ -14,10 +14,10 @@ export default function CompleteProfilePage() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [loading, setLoading] = useState(false);
 
-  // Redirect if not authenticated or profile is already complete
+
   useEffect(() => {
     if (status === 'unauthenticated') {
-      router.push('/register');
+      router.push('/auth/register');
       return;
     }
     

@@ -5,15 +5,14 @@ import { Search, ShoppingCart, User, Menu, X, Heart, ChevronDown } from 'lucide-
 import { useCart } from '../context/CartContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link'
-import { signOut } from 'next-auth/react'
+import { signOut, useSession } from 'next-auth/react'
 
 export default function ProfessionalNavbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const { cartCount } = useCart();
   const router = useRouter();
-
-  
+  const { data: session } = useSession();
 
   const categories = [
     'Electronics',
@@ -23,19 +22,24 @@ export default function ProfessionalNavbar() {
     'Books',
     'Beauty'
   ]
+
   const handleSignOut = () => {
     signOut({
       callbackUrl: '/', // redirect after sign out
     });
   };
+
+  const handleLogin = () => {
+    router.push('/auth/login');
+  };
+
   return (
     <header className="bg-white shadow-lg sticky top-0 z-50 w-full">
-   
       {/* Main navbar */}
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between py-4">
           {/*-------- Logo----------- */}
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 cursor-pointer" onClick={() => router.push('/')}>
             <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -64,7 +68,7 @@ export default function ProfessionalNavbar() {
                 placeholder="Search for products, categories and more..."
                 className="w-full pl-4 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
               />
-              <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-grey p-2 rounded-lg hover:bg-blue-700 transition-colors">
+              <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer">
                 <Search className="w-4 h-4" />
               </button>
             </div>
@@ -73,7 +77,7 @@ export default function ProfessionalNavbar() {
           {/*--------- Right side icons---------- */}
           <div className="flex items-center space-x-4">
             {/* Wishlist */}
-            <button className="hidden md:flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors">
+            <button className="hidden md:flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors cursor-pointer">
               <Heart className="w-5 h-5" />
               <span className="text-sm">Wishlist</span>
             </button>
@@ -81,8 +85,8 @@ export default function ProfessionalNavbar() {
             {/* Cart */}
             <button
               onClick={() => router.push('/cart')}
-              className="relative flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors"
-                >
+              className="relative flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors cursor-pointer"
+            >
               <div className="relative">
                 <ShoppingCart className="w-6 h-6" />
                 {cartCount > 0 && (
@@ -94,46 +98,68 @@ export default function ProfessionalNavbar() {
               <span className="hidden md:block text-sm">Cart</span>
             </button>
 
-
             {/* Profile dropdown */}
             <div className="relative">
               <button
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors"
+                className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors cursor-pointer"
               >
                 <User className="w-5 h-5" />
                 <span className="hidden md:block text-sm">Account</span>
                 <ChevronDown className="w-4 h-4" />
               </button>
               
-                {isProfileOpen && (
-                        <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border z-10">
-                          <div className="py-2">
-                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                              My Profile
-                            </a>
-                            <Link href="/my-orders" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                              My Orders
-                            </Link>
-                            <a href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
-                              Settings
-                            </a>
-                            <hr className="my-1" />
-                            <button
-                              onClick={handleSignOut}
-                              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                            >
-                              Sign Out
-                            </button>
-                          </div>
-                        </div>
-                      )}
+              {isProfileOpen && (
+                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border z-10">
+                  <div className="py-2">
+                    <div className="px-4 py-2 text-sm font-medium text-gray-900 border-b border-gray-100">
+                      My Account
+                    </div>
+                    
+                    {/* Show different content based on authentication status */}
+                    {session ? (
+                      // Authenticated user options
+                      <>
+                        <Link 
+                          href="/my-orders" 
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors"
+                          onClick={() => setIsProfileOpen(false)}
+                        >
+                          Orders
+                        </Link>
+                        <Link 
+                          href="/chat" 
+                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors"
+                          onClick={() => setIsProfileOpen(false)}
+                        >
+                          Chat with Sellers
+                        </Link>
+                        <hr className="my-1" />
+                        <button
+                          onClick={handleSignOut}
+                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors"
+                        >
+                          Logout
+                        </button>
+                      </>
+                    ) : (
+                      // Non-authenticated user options
+                      <button
+                        onClick={handleLogin}
+                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors"
+                      >
+                        Login
+                      </button>
+                    )}
+                  </div>
+                </div>
+              )}
             </div>
 
             {/* Mobile menu button */}
             <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="md:hidden text-gray-700"
+              className="md:hidden text-gray-700 cursor-pointer hover:text-blue-600 transition-colors"
             >
               {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
             </button>
@@ -146,7 +172,7 @@ export default function ProfessionalNavbar() {
             <a
               key={index}
               href="#"
-              className="text-gray-700 hover:text-blue-600 font-medium transition-colors relative group"
+              className="text-gray-700 hover:text-blue-600 font-medium transition-colors relative group cursor-pointer"
             >
               {category}
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
@@ -154,7 +180,7 @@ export default function ProfessionalNavbar() {
           ))}
           <a
             href="#"
-            className="text-red-600 font-semibold hover:text-red-700 transition-colors"
+            className="text-red-600 font-semibold hover:text-red-700 transition-colors cursor-pointer"
           >
             Sale
           </a>
@@ -168,7 +194,7 @@ export default function ProfessionalNavbar() {
               placeholder="Search products..."
               className="w-full pl-4 pr-12 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
-            <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400">
+            <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer hover:text-blue-600 transition-colors">
               <Search className="w-5 h-5" />
             </button>
           </div>
@@ -184,21 +210,61 @@ export default function ProfessionalNavbar() {
                 <a
                   key={index}
                   href="#"
-                  className="block text-gray-700 hover:text-blue-600 font-medium py-2"
+                  className="block text-gray-700 hover:text-blue-600 font-medium py-2 cursor-pointer transition-colors"
                 >
                   {category}
                 </a>
               ))}
               <a
                 href="#"
-                className="block text-red-600 font-semibold hover:text-red-700 py-2"
+                className="block text-red-600 font-semibold hover:text-red-700 py-2 cursor-pointer transition-colors"
               >
                 Sale
               </a>
               <hr className="my-4" />
-              <a href="#" className="block text-gray-700 hover:text-blue-600 py-2">Wishlist</a>
-              <a href="#" className="block text-gray-700 hover:text-blue-600 py-2">Track Order</a>
-              <a href="#" className="block text-gray-700 hover:text-blue-600 py-2">Help</a>
+              <a href="#" className="block text-gray-700 hover:text-blue-600 py-2 cursor-pointer transition-colors">
+                Wishlist
+              </a>
+              <a href="#" className="block text-gray-700 hover:text-blue-600 py-2 cursor-pointer transition-colors">
+                Track Order
+              </a>
+              <a href="#" className="block text-gray-700 hover:text-blue-600 py-2 cursor-pointer transition-colors">
+                Help
+              </a>
+              
+              {/* Mobile authentication section */}
+              <hr className="my-4" />
+              {session ? (
+                <>
+                  <Link 
+                    href="/my-orders" 
+                    className="block text-gray-700 hover:text-blue-600 py-2 cursor-pointer transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Orders
+                  </Link>
+                  <Link 
+                    href="/chat" 
+                    className="block text-gray-700 hover:text-blue-600 py-2 cursor-pointer transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Chat with Sellers
+                  </Link>
+                  <button
+                    onClick={handleSignOut}
+                    className="block text-left text-gray-700 hover:text-blue-600 py-2 cursor-pointer transition-colors"
+                  >
+                    Logout
+                  </button>
+                </>
+              ) : (
+                <button
+                  onClick={handleLogin}
+                  className="block text-left text-gray-700 hover:text-blue-600 py-2 cursor-pointer transition-colors"
+                >
+                  Login
+                </button>
+              )}
             </nav>
           </div>
         </div>

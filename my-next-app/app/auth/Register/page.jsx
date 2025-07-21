@@ -74,7 +74,7 @@ export default function RegisterPage() {
 
       if (res.ok) {
         toast.success('Registration successful! Please log in.');
-        router.push(`/login?next=${encodeURIComponent(next)}`);
+        router.push(`/auth/login?next=${encodeURIComponent(next)}`);
       } else {
         setError(
           data?.errors?.email?.[0] ||

@@ -2,3 +2,9 @@
 body {
   overflow-x: hidden;
 }
+button:hover,
+[type="button"]:hover,
+[type="submit"]:hover,
+a:hover {
+  cursor: pointer;
+}

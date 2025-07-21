@@ -116,6 +116,7 @@ export default function CartPage() {
   };
 
 
+// 1. Updated Cart handleCheckout function
 const handleCheckout = () => {
   if (status === 'loading') {
     return;
@@ -123,11 +124,12 @@ const handleCheckout = () => {
   
   if (status === 'unauthenticated' || !session) {
     toast.error('Please create an account or login to checkout');
-    router.push(`/register?next=${encodeURIComponent('/cart')}`);
+    // Redirect to register page (not login) for new users
+    router.push(`/auth/register?next=${encodeURIComponent('/cart')}`);
     return;
   }
   
-
+  // Check if user needs to complete profile (Google users without phone)
   if (session?.user?.isNewUser || !session?.user?.phone_number) {
     router.push('/complete-profile');
     return;
