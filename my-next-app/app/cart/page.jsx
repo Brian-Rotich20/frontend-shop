@@ -116,15 +116,20 @@ export default function CartPage() {
   };
 
 
-const handleCheckout = () => {
-  if (status !== 'authenticated') {
-    toast.error('You must be logged in to proceed to checkout');
-    router.push(`/auth/login?next=/checkout`);
-    return;
-  }
-  router.push('/checkout');
-};
-
+ const handleCheckout = () => {
+    if (status === 'loading') {
+      return;
+    }
+    
+    if (status === 'unauthenticated' || !session) {
+      toast.error('You must be logged in to proceed to checkout');
+      
+      router.push(`/auth/login?next=${encodeURIComponent('/cart')}`);
+      return;
+    }
+    
+    router.push('/checkout');
+  };
 
   if (status === "loading" || loading) {
     return (
@@ -281,14 +286,14 @@ const handleCheckout = () => {
                   </div>
                 </div>
                 
-                <button
+                 <button
                   onClick={handleCheckout}
-                  disabled={status ==="loading"}
-                  className="w-full bg-blue-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  disabled={status === "loading" || !cart || cart.cartitems?.length === 0}
+                  className="w-full bg-blue-600 border border-transparent rounded-md shadow-sm py-3 px-4 text-base font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  Proceed to Checkout
+                  {status === "loading" ? "Loading..." : "Proceed to Checkout"}
                 </button>
-                
+                              
                 <p className="text-xs text-gray-500 text-center mt-4">
                   Shipping and taxes calculated at checkout
                 </p>
