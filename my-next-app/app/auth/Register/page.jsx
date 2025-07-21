@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { signIn } from "next-auth/react";
+import { useState, useEffect } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
+import { signIn, useSession } from "next-auth/react";
 import toast from 'react-hot-toast';
 
 function GoogleIcon() {
@@ -18,6 +18,10 @@ function GoogleIcon() {
 
 export default function RegisterPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const { data: session, status } = useSession();
+  const next = searchParams.get("next") || "/";
+  
   const [form, setForm] = useState({
     email: '',
     phone_number: '',
@@ -28,13 +32,36 @@ export default function RegisterPage() {
 
   const [error, setError] = useState(null);
 
+  // Handle redirect for authenticated users
+  useEffect(() => {
+    if (status === 'authenticated' && session) {
+      if (session.user.isNewUser || !session.user.phone_number) {
+        router.push('/complete-profile');
+      } else {
+        router.push(next);
+      }
+    }
+  }, [status, session, router, next]);
+
   const handleChange = (field) => (e) => {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
+  };
+
+  const handleGoogleSignUp = async () => {
+    await signIn("google", { 
+      callbackUrl: '/complete-profile' // Google users need to complete profile
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+
+    // Basic validation
+    if (form.password !== form.password_confirm) {
+      setError('Passwords do not match');
+      return;
+    }
 
     try {
       const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register/`, {
@@ -46,8 +73,8 @@ export default function RegisterPage() {
       const data = await res.json();
 
       if (res.ok) {
-        toast('Registration successful! Please log in.');
-        router.push('/auth/login');
+        toast.success('Registration successful! Please log in.');
+        router.push(`/login?next=${encodeURIComponent(next)}`);
       } else {
         setError(
           data?.errors?.email?.[0] ||
@@ -58,10 +85,14 @@ export default function RegisterPage() {
         );
       }
     } catch (err) {
-      setError.toast('Something went wrong. Please try again.');
+      setError('Something went wrong. Please try again.');
       console.error(err);
     }
   };
+
+  if (status === 'loading') {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
@@ -69,12 +100,21 @@ export default function RegisterPage() {
         <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Create Account</h2>
 
         <button
-        onClick={() => signIn("google")}
-        className="w-full flex items-center justify-center border border-gray-300 rounded-lg py-2 text-sm mb-6 hover:bg-gray-50"
-      >
-        <GoogleIcon />
-        Sign up with Google
-      </button>
+          onClick={handleGoogleSignUp}
+          className="w-full flex items-center justify-center border border-gray-300 rounded-lg py-2 text-sm mb-6 hover:bg-gray-50"
+        >
+          <GoogleIcon />
+          Sign up with Google
+        </button>
+
+        <div className="relative mb-6">
+          <div className="absolute inset-0 flex items-center">
+            <div className="w-full border-t border-gray-300" />
+          </div>
+          <div className="relative flex justify-center text-sm">
+            <span className="px-2 bg-white text-gray-500">Or register with email</span>
+          </div>
+        </div>
 
         {error && (
           <div className="bg-red-100 text-red-700 px-4 py-2 rounded text-sm mb-4 text-center">
@@ -88,6 +128,7 @@ export default function RegisterPage() {
             value={form.email}
             onChange={handleChange('email')}
             placeholder="Email"
+            required
             className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
           />
           <input
@@ -95,6 +136,7 @@ export default function RegisterPage() {
             value={form.phone_number}
             onChange={handleChange('phone_number')}
             placeholder="Phone Number"
+            required
             className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
           />
           <input
@@ -109,6 +151,7 @@ export default function RegisterPage() {
             value={form.password}
             onChange={handleChange('password')}
             placeholder="Password"
+            required
             className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
           />
           <input
@@ -116,6 +159,7 @@ export default function RegisterPage() {
             value={form.password_confirm}
             onChange={handleChange('password_confirm')}
             placeholder="Confirm Password"
+            required
             className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
           />
 
@@ -123,15 +167,18 @@ export default function RegisterPage() {
             type="submit"
             className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold text-sm hover:bg-green-700 transition"
           >
-            Register
+            Create Account
           </button>
         </form>
 
         <p className="text-sm text-center text-gray-600 mt-4">
           Already have an account?{' '}
-          <a href="/auth/login" className="text-green-600 hover:underline">
+          <button
+            onClick={() => router.push(`/login?next=${encodeURIComponent(next)}`)}
+            className="text-green-600 hover:underline"
+          >
             Log in
-          </a>
+          </button>
         </p>
       </div>
     </div>

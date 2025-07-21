@@ -8,7 +8,7 @@ import toast from 'react-hot-toast';
 import { signIn } from 'next-auth/react';
 
 export default function CartPage() {
-  const {  status } = useSession();
+  const { data: session, status } = useSession();
   const [cart, setCart] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -116,20 +116,25 @@ export default function CartPage() {
   };
 
 
- const handleCheckout = () => {
-    if (status === 'loading') {
-      return;
-    }
-    
-    if (status === 'unauthenticated' || !session) {
-      toast.error('You must be logged in to proceed to checkout');
-      
-      router.push(`/login?next=${encodeURIComponent('/cart')}`);
-      return;
-    }
-    
-    router.push('/checkout');
-  };
+const handleCheckout = () => {
+  if (status === 'loading') {
+    return;
+  }
+  
+  if (status === 'unauthenticated' || !session) {
+    toast.error('Please create an account or login to checkout');
+    router.push(`/register?next=${encodeURIComponent('/cart')}`);
+    return;
+  }
+  
+
+  if (session?.user?.isNewUser || !session?.user?.phone_number) {
+    router.push('/complete-profile');
+    return;
+  }
+  
+  router.push('/checkout');
+};
 
   if (status === "loading" || loading) {
     return (
