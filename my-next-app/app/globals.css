@@ -8,3 +8,22 @@ button:hover,
 a:hover {
   cursor: pointer;
 }
+/* globals.css or any global stylesheet */
+
+#nprogress {
+  pointer-events: none;
+}
+
+#nprogress .bar {
+  background: #2563eb; /* blue-600 */
+  position: fixed;
+  z-index: 9999;
+  top: 64px; /* adjust if your navbar is fixed */
+  left: 0;
+  width: 100%;
+  height: 3px;
+}
+
+#nprogress .peg {
+  box-shadow: 0 0 10px #2563eb, 0 0 5px #2563eb;
+}

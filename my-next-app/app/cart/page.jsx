@@ -130,10 +130,10 @@ const handleCheckout = () => {
   }
   
   // Check if user needs to complete profile (Google users without phone)
-  if (session?.user?.isNewUser || !session?.user?.phone_number) {
-    router.push('/complete-profile');
-    return;
-  }
+  // if (session?.user?.isNewUser || !session?.user?.phone_number) {
+  //   router.push('/complete-profile');
+  //   return;
+  // }
   
   router.push('/checkout');
 };
@@ -288,7 +288,7 @@ const handleCheckout = () => {
                   <div className="border-t border-gray-200 pt-3">
                     <div className="flex justify-between text-base font-medium">
                       <span className="text-gray-900">Total</span>
-                      <span className="text-gray-900">${cart.cart_total}</span>
+                      <span className="text-gray-900">Ksh {cart.cart_total}</span>
                     </div>
                   </div>
                 </div>

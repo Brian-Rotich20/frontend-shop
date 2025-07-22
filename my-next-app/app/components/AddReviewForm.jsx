@@ -18,7 +18,7 @@ export default function AddReviewForm({ product, refreshReviews }) {
 
     if (!session?.user?.email) {
       toast.error('Please login to submit a review');
-      router.push('/login');
+      router.push('/auth/login');
       return;
     }
 

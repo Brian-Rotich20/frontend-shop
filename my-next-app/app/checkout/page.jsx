@@ -386,7 +386,7 @@ const pollPaymentStatus = async (cartCode) => {
                       <p className="text-sm font-medium text-gray-900 truncate">{item.product.name}</p>
                       <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
                     </div>
-                    <p className="text-sm font-medium text-gray-900">${item.sub_total}</p>
+                    <p className="text-sm font-medium text-gray-900">Ksh{item.sub_total}</p>
                   </div>
                 ))}
               </div>
@@ -394,7 +394,7 @@ const pollPaymentStatus = async (cartCode) => {
               <div className="border-t border-gray-200 pt-4 space-y-2">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Subtotal:</span>
-                  <span className="text-gray-900">${cart.cart_total}</span>
+                  <span className="text-gray-900">Ksh{cart.cart_total}</span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Shipping:</span>
@@ -402,7 +402,7 @@ const pollPaymentStatus = async (cartCode) => {
                 </div>
                 <div className="flex justify-between text-base font-medium pt-2 border-t border-gray-200">
                   <span className="text-gray-900">Total:</span>
-                  <span className="text-blue-600">${cart.cart_total}</span>
+                  <span className="text-blue-600">Ksh{cart.cart_total}</span>
                 </div>
               </div>
 
