@@ -23,7 +23,7 @@ export default async function ProductDetailPage({ params }) {
           <p className="text-gray-600 mb-6">Sorry, we couldn't find the product you're looking for.</p>
           <button 
             onClick={() => window.history.back()}
-            className="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition-colors"
+            className="bg-orange-600 text-white px-6 py-3 rounded-lg hover:bg-orange-700 transition-colors"
           >
             Go Back
           </button>

@@ -87,7 +87,7 @@ const fetchRating = async () => {
                   </div>
                   <span className="text-gray-600 text-sm">(4.5 out of 5)</span>
                 </div>
-                <p className="text-4xl font-bold text-blue-600 mb-4">
+                <p className="text-4xl font-bold text-orange-500 mb-4">
                   Ksh {Number(product.price).toLocaleString()}
                 </p>
               </div>

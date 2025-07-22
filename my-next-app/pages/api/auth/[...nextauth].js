@@ -11,8 +11,17 @@ export default NextAuth({
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        if (!credentials?.username || !credentials?.password) {
+          throw new Error("Email/phone and password are required");
+        }
+
         try {
-          const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/login/`, {
+          const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL || process.env.API_BASE_URL;
+          if (!apiUrl) {
+            throw new Error("API base URL not configured");
+          }
+
+          const res = await fetch(`${apiUrl}/auth/login/`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -32,12 +41,19 @@ export default NextAuth({
               token: data.token,
               isNewUser: false,
             };
+          } else {
+            console.error("Login failed:", data.errors || data.message);
+            throw new Error(data.message || "Invalid credentials");
           }
+
         } catch (error) {
           console.error("Auth error:", error);
+          // Re-throw with a user-friendly message
+          if (error.message.includes("fetch")) {
+            throw new Error("Unable to connect to authentication server");
+          }
+          throw error;
         }
-
-        return null;
       },
     }),
 
@@ -49,41 +65,68 @@ export default NextAuth({
 
   callbacks: {
     async jwt({ token, account, user }) {
-      if (account?.provider === "google") {
-        token.isNewUser = true;
-        token.email = user.email;
-        token.name = user.name;
+      // Handle Google OAuth
+      if (account?.provider === "google" && user) {
+        return {
+          ...token,
+          isNewUser: true,
+          email: user.email,
+          name: user.name,
+          accessToken: null, // Will be set after backend registration
+        };
       }
 
+      // Handle credentials login
       if (user?.token) {
-        token.accessToken = user.token;
-        token.phone_number = user.phone_number;
-        token.isNewUser = user.isNewUser;
+        return {
+          ...token,
+          accessToken: user.token,
+          phone_number: user.phone_number,
+          isNewUser: user.isNewUser || false,
+        };
       }
 
       return token;
     },
 
     async session({ session, token }) {
-      session.accessToken = token.accessToken || null;
-      session.user.phone_number = token.phone_number || null;
-      session.user.isNewUser = token.isNewUser || false;
-      return session;
+      return {
+        ...session,
+        accessToken: token.accessToken || null,
+        user: {
+          ...session.user,
+          phone_number: token.phone_number || null,
+          isNewUser: token.isNewUser || false,
+        }
+      };
     },
 
-    async signIn() {
+    async signIn({ user, account, profile }) {
+      // Allow all sign-ins - handle validation in the authorize function
       return true;
+    },
+
+    async redirect({ url, baseUrl }) {
+      // Allows relative callback URLs
+      if (url.startsWith("/")) return `${baseUrl}${url}`;
+      // Allows callback URLs on the same origin
+      else if (new URL(url).origin === baseUrl) return url;
+      return baseUrl;
     },
   },
 
   session: {
     strategy: "jwt",
+    maxAge: 24 * 60 * 60, // 24 hours
   },
 
   pages: {
     signIn: "/auth/login",
     signUp: "/auth/register",
+    error: "/auth/error",
   },
 
   secret: process.env.NEXTAUTH_SECRET,
+
+  debug: process.env.NODE_ENV === "development",
 });

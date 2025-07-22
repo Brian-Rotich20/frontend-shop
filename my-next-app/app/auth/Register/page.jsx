@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn, useSession } from "next-auth/react";
 import toast from 'react-hot-toast';
@@ -16,11 +16,11 @@ function GoogleIcon() {
   );
 }
 
-export default function RegisterPage() {
+function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: session, status } = useSession();
-  const next = searchParams.get("next") || "/";
+  const next = searchParams?.get("next") || "/";
   
   const [form, setForm] = useState({
     email: '',
@@ -31,6 +31,7 @@ export default function RegisterPage() {
   });
 
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(false);
 
   // Handle redirect for authenticated users
   useEffect(() => {
@@ -48,23 +49,31 @@ export default function RegisterPage() {
   };
 
   const handleGoogleSignUp = async () => {
-    await signIn("google", { 
-      callbackUrl: '/complete-profile' // Google users need to complete profile
-    });
+    try {
+      await signIn("google", { 
+        callbackUrl: '/complete-profile'
+      });
+    } catch (error) {
+      console.error('Google sign up error:', error);
+      toast.error('Failed to sign up with Google');
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
+    setLoading(true);
 
     // Basic validation
     if (form.password !== form.password_confirm) {
       setError('Passwords do not match');
+      setLoading(false);
       return;
     }
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/auth/register/`, {
+      const apiUrl = process.env.NEXT_PUBLIC_API_BASE_URL || '/api';
+      const res = await fetch(`${apiUrl}/auth/register/`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
@@ -86,12 +95,18 @@ export default function RegisterPage() {
       }
     } catch (err) {
       setError('Something went wrong. Please try again.');
-      console.error(err);
+      console.error('Registration error:', err);
+    } finally {
+      setLoading(false);
     }
   };
 
   if (status === 'loading') {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div>Loading...</div>
+      </div>
+    );
   }
 
   return (
@@ -101,7 +116,8 @@ export default function RegisterPage() {
 
         <button
           onClick={handleGoogleSignUp}
-          className="w-full flex items-center justify-center border border-gray-300 rounded-lg py-2 text-sm mb-6 hover:bg-gray-50"
+          disabled={loading}
+          className="w-full flex items-center justify-center border border-gray-300 rounded-lg py-2 text-sm mb-6 hover:bg-gray-50 disabled:opacity-50"
         >
           <GoogleIcon />
           Sign up with Google
@@ -129,7 +145,8 @@ export default function RegisterPage() {
             onChange={handleChange('email')}
             placeholder="Email"
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
+            disabled={loading}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none disabled:opacity-50"
           />
           <input
             type="text"
@@ -137,14 +154,16 @@ export default function RegisterPage() {
             onChange={handleChange('phone_number')}
             placeholder="Phone Number"
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
+            disabled={loading}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none disabled:opacity-50"
           />
           <input
             type="text"
             value={form.username}
             onChange={handleChange('username')}
             placeholder="Username (optional)"
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
+            disabled={loading}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none disabled:opacity-50"
           />
           <input
             type="password"
@@ -152,7 +171,8 @@ export default function RegisterPage() {
             onChange={handleChange('password')}
             placeholder="Password"
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
+            disabled={loading}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none disabled:opacity-50"
           />
           <input
             type="password"
@@ -160,27 +180,42 @@ export default function RegisterPage() {
             onChange={handleChange('password_confirm')}
             placeholder="Confirm Password"
             required
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none"
+            disabled={loading}
+            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none disabled:opacity-50"
           />
 
           <button
             type="submit"
-            className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold text-sm hover:bg-green-700 transition"
+            disabled={loading}
+            className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold text-sm hover:bg-green-700 transition disabled:opacity-50"
           >
-            Create Account
+            {loading ? 'Creating Account...' : 'Create Account'}
           </button>
         </form>
 
         <p className="text-sm text-center text-gray-600 mt-4">
           Already have an account?{' '}
           <button
-            onClick={() => router.push(`/login?next=${encodeURIComponent(next)}`)}
+            onClick={() => router.push(`/auth/login?next=${encodeURIComponent(next)}`)}
             className="text-green-600 hover:underline"
+            disabled={loading}
           >
             Log in
           </button>
         </p>
       </div>
     </div>
+  );
+}
+
+export default function RegisterPage() {
+  return (
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center">
+        <div>Loading registration...</div>
+      </div>
+    }>
+      <RegisterForm />
+    </Suspense>
   );
 }

@@ -14,14 +14,6 @@ export default function ProfessionalNavbar() {
   const router = useRouter();
   const { data: session } = useSession();
 
-  const categories = [
-    'Electronics',
-    'Clothing',
-    'Home & Garden',
-    'Sports',
-    'Books',
-    'Beauty'
-  ]
 
   const handleSignOut = () => {
     signOut({
@@ -40,7 +32,7 @@ export default function ProfessionalNavbar() {
         <div className="flex items-center justify-between py-4">
           {/*-------- Logo----------- */}
           <div className="flex items-center space-x-2 cursor-pointer" onClick={() => router.push('/')}>
-            <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-lg flex items-center justify-center">
+            <div className="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
@@ -66,9 +58,9 @@ export default function ProfessionalNavbar() {
               <input
                 type="text"
                 placeholder="Search for products, categories and more..."
-                className="w-full pl-4 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                className="w-full pl-4 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
               />
-              <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white p-2 rounded-lg hover:bg-blue-700 transition-colors cursor-pointer">
+              <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-orange-600 text-white p-2 rounded-lg hover:bg-oranage-700 transition-colors cursor-pointer">
                 <Search className="w-4 h-4" />
               </button>
             </div>
@@ -77,7 +69,7 @@ export default function ProfessionalNavbar() {
           {/*--------- Right side icons---------- */}
           <div className="flex items-center space-x-4">
             {/* Wishlist */}
-            <button className="hidden md:flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors cursor-pointer">
+            <button className="hidden md:flex items-center space-x-1 text-gray-700 hover:text-orange-600 transition-colors cursor-pointer">
               <Heart className="w-5 h-5" />
               <span className="text-sm">Wishlist</span>
             </button>
@@ -85,7 +77,7 @@ export default function ProfessionalNavbar() {
             {/* Cart */}
             <button
               onClick={() => router.push('/cart')}
-              className="relative flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors cursor-pointer"
+              className="relative flex items-center space-x-1 text-gray-700 hover:text-orange-600 transition-colors cursor-pointer"
             >
               <div className="relative">
                 <ShoppingCart className="w-6 h-6" />
@@ -102,7 +94,7 @@ export default function ProfessionalNavbar() {
             <div className="relative">
               <button
                 onClick={() => setIsProfileOpen(!isProfileOpen)}
-                className="flex items-center space-x-1 text-gray-700 hover:text-blue-600 transition-colors cursor-pointer"
+                className="flex items-center space-x-1 text-gray-700 hover:text-orange-600 transition-colors cursor-pointer"
               >
                 <User className="w-5 h-5" />
                 <span className="hidden md:block text-sm">Account</span>
@@ -116,7 +108,6 @@ export default function ProfessionalNavbar() {
                       My Account
                     </div>
                     
-                    {/* Show different content based on authentication status */}
                     {session ? (
                       // Authenticated user options
                       <>
@@ -165,26 +156,6 @@ export default function ProfessionalNavbar() {
             </button>
           </div>
         </div>
-
-        {/* Categories navigation
-        <nav className="hidden md:flex items-center space-x-8 py-3 border-t border-gray-200">
-          {categories.map((category, index) => (
-            <a
-              key={index}
-              href="#"
-              className="text-gray-700 hover:text-blue-600 font-medium transition-colors relative group cursor-pointer"
-            >
-              {category}
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-blue-600 transition-all group-hover:w-full"></span>
-            </a>
-          ))}
-          <a
-            href="#"
-            className="text-red-600 font-semibold hover:text-red-700 transition-colors cursor-pointer"
-          >
-            Sale
-          </a>
-        </nav> */}
 
         {/* Mobile search */}
         <div className="md:hidden py-3 border-t border-gray-200">

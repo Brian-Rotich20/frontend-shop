@@ -2,27 +2,24 @@
 
 import { useState } from 'react';
 import { useCart } from '../context/CartContext';
+import toast from 'react-hot-toast';
 
 export default function AddToCartButton({ productId, className = "" }) {
   const { refreshCart, getOrCreateCartCode } = useCart();
-  const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
   const addToCart = async (productId, quantity = 1) => {
     try {
       setLoading(true);
-      setMessage(''); // Clear previous messages
 
-      // Get or create cart code
       const cartCode = await getOrCreateCartCode();
       if (!cartCode) {
-        setMessage('Failed to create cart. Please try again.');
+        toast.error('Failed to create cart. Please try again.');
         return;
       }
 
-      // Get user email from localStorage (if available)
-      const userEmail = typeof window !== 'undefined' 
-        ? localStorage.getItem('user_email') 
+      const userEmail = typeof window !== 'undefined'
+        ? localStorage.getItem('user_email')
         : null;
 
       const response = await fetch('https://django-shop-drf.onrender.com/add_to_cart/', {
@@ -34,51 +31,46 @@ export default function AddToCartButton({ productId, className = "" }) {
           product_id: productId,
           quantity,
           cart_code: cartCode,
-          email: userEmail
+          email: userEmail,
         }),
       });
 
       const data = await response.json();
 
       if (response.ok) {
-        setMessage('Product added to cart successfully!');
-        // Refresh cart after successful addition
+        toast.success('Product added to cart successfully!');
         await refreshCart();
       } else {
-        setMessage(data.error || data.message || 'Failed to add to cart');
+        toast.error(data.error || data.message || 'Failed to add to cart');
       }
     } catch (error) {
       console.error('Add to cart error:', error);
-      setMessage('Network error. Please try again.');
+      toast.error('Network error. Please try again.');
     } finally {
       setLoading(false);
-      setTimeout(() => setMessage(''), 3000);
     }
   };
 
   return (
-    <div className="space-y-2">
-      <button 
-        onClick={(e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          addToCart(productId);
-        }}
-        disabled={loading}
-        className={`w-full py-2 px-4 rounded-md font-medium transition-colors ${
-          loading 
-            ? 'bg-gray-400 text-gray-600 cursor-not-allowed' 
-            : 'bg-blue-600 text-white hover:bg-blue-700'
-        } ${className}`}
-      >
-        {loading ? 'Adding...' : 'Add to Cart'}
-      </button>
-
-      {message && (
-        <p className={`text-sm ${message.includes('successfully') ? 'text-green-600' : 'text-red-600'}`}>
-          {message}
-        </p>
+     <div className="space-y-2">
+    <button
+      onClick={(e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        addToCart(productId);
+      }}
+      disabled={loading}
+      className={`group relative w-full py-2 px-6 rounded-md font-medium transition-all duration-300 transform ${
+        loading
+          ? 'bg-orange-500 text-white cursor-not-allowed'
+          : 'bg-gradient-to-r from-orange-500 to-orange-900 hover:from-orange-700 hover:to-orange-800 text-white shadow-lg hover:shadow-orange-900/50'
+      } ${className}`}
+    >
+      <span className="relative z-10">{loading ? 'Adding...' : 'Add to Cart'}</span>
+      {!loading && (
+        <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-orange-700 rounded-md opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
       )}
+    </button>
     </div>
   );
 }
