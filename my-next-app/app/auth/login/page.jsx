@@ -4,6 +4,7 @@ import { signIn, useSession } from 'next-auth/react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useState, Suspense, useEffect } from 'react';
 import toast from 'react-hot-toast';
+import { Eye, EyeOff } from 'lucide-react';
 
 function GoogleIcon() {
   return (
@@ -16,10 +17,23 @@ function GoogleIcon() {
   );
 }
 
+function CompanyLogo() {
+  return (
+    <div className="flex items-center justify-center mb-6">
+      <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg">
+        <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+          <div className="w-4 h-4 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-sm"></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 function LoginForm() {
   const [emailOrPhone, setEmailOrPhone] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
   const { data: session, status } = useSession();
@@ -65,17 +79,30 @@ function LoginForm() {
   };
 
   if (status === 'loading') {
-    return <div>Loading...</div>;
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
+        <div className="animate-pulse">
+          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl mx-auto mb-4"></div>
+          <div className="text-slate-600">Loading...</div>
+        </div>
+      </div>
+    );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-      <div className="bg-white w-full max-w-md rounded-xl shadow-md p-6">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Welcome Back</h2>
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 flex items-center justify-center p-4 sm:p-6">
+      <div className="bg-white/80 backdrop-blur-sm w-full max-w-md rounded-2xl shadow-xl border border-white/20 p-6 sm:p-8">
+        <CompanyLogo />
+        
+        <div className="text-center mb-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-2">Welcome Back</h2>
+          <p className="text-slate-600 text-sm">Sign in to your account</p>
+        </div>
 
         <button
           onClick={handleGoogleLogin}
-          className="w-full flex items-center justify-center border border-gray-300 rounded-lg py-2 text-sm mb-6 hover:bg-gray-50"
+          disabled={loading}
+          className="w-full flex items-center justify-center border border-slate-200 rounded-xl py-3 px-4 text-sm mb-6 hover:bg-slate-50 disabled:opacity-50 transition-all duration-200 hover:shadow-md active:scale-[0.98]"
         >
           <GoogleIcon />
           Sign in with Google
@@ -83,50 +110,91 @@ function LoginForm() {
 
         <div className="relative mb-6">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-300" />
+            <div className="w-full border-t border-slate-200" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">Or login with credentials</span>
+            <span className="px-4 bg-white text-slate-500">Or sign in with credentials</span>
           </div>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="text"
-            placeholder="Email or Phone"
-            value={emailOrPhone}
-            onChange={(e) => setEmailOrPhone(e.target.value)}
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
+          <div>
+            <input
+              type="text"
+              placeholder="Email or phone number"
+              value={emailOrPhone}
+              onChange={(e) => setEmailOrPhone(e.target.value)}
+              required
+              disabled={loading}
+              className="w-full px-4 py-3 border border-slate-200 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none disabled:opacity-50 transition-all duration-200 text-base"
+            />
+          </div>
 
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
-          />
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              required
+              disabled={loading}
+              className="w-full px-4 py-3 pr-12 border border-slate-200 rounded-xl shadow-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none disabled:opacity-50 transition-all duration-200 text-base"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none p-1"
+              disabled={loading}
+            >
+              {showPassword ? (
+                <EyeOff className="w-5 h-5" />
+              ) : (
+                <Eye className="w-5 h-5" />
+              )}
+            </button>
+          </div>
+
+          <div className="flex items-center justify-between text-sm">
+            <label className="flex items-center">
+              <input
+                type="checkbox"
+                className="w-4 h-4 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500 focus:ring-2"
+              />
+              <span className="ml-2 text-slate-600">Remember me</span>
+            </label>
+            <a href="#" className="text-blue-600 hover:text-blue-700 font-medium hover:underline">
+              Forgot password?
+            </a>
+          </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold text-sm hover:bg-blue-700 transition disabled:opacity-50"
+            className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 px-4 rounded-xl font-semibold text-base hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 disabled:opacity-50 hover:shadow-lg active:scale-[0.98] mt-6"
           >
-            {loading ? 'Signing in...' : 'Login'}
+            {loading ? (
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                Signing in...
+              </div>
+            ) : (
+              'Sign In'
+            )}
           </button>
         </form>
 
-        <p className="text-sm text-center text-gray-600 mt-4">
-          Don't have an account?{' '}
-          <button
-            onClick={() => router.push(`/auth/register?next=${encodeURIComponent(next)}`)}
-            className="text-blue-600 hover:underline"
-          >
-            Create one
-          </button>
-        </p>
+        <div className="text-center mt-6 pt-6 border-t border-slate-100">
+          <p className="text-sm text-slate-600">
+            Don't have an account?{' '}
+            <button
+              onClick={() => router.push(`/auth/register?next=${encodeURIComponent(next)}`)}
+              className="text-blue-600 hover:text-blue-700 font-semibold hover:underline transition-colors duration-200"
+              disabled={loading}
+            >
+              Create one
+            </button>
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -134,7 +202,14 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div>Loading login...</div>}>
+    <Suspense fallback={
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
+        <div className="animate-pulse">
+          <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl mx-auto mb-4"></div>
+          <div className="text-slate-600">Loading login...</div>
+        </div>
+      </div>
+    }>
       <LoginForm />
     </Suspense>
   );

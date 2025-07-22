@@ -6,24 +6,35 @@ import { useCart } from '../context/CartContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link'
 import { signOut, useSession } from 'next-auth/react'
+import { Loader2 } from 'lucide-react'; 
 
-export default function ProfessionalNavbar() {
+export default function ProfessionalNavbar({handleSignOut}) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isProfileOpen, setIsProfileOpen] = useState(false)
   const { cartCount } = useCart();
   const router = useRouter();
   const { data: session } = useSession();
+  const [loadingAction, setLoadingAction] = useState(null);
 
 
-  const handleSignOut = () => {
-    signOut({
-      callbackUrl: '/', // redirect after sign out
-    });
+
+
+  const handleLogoutClick = async () => {
+    setLoadingAction("logout");
+    await handleSignOut();
+    setLoadingAction(null);
   };
 
-  const handleLogin = () => {
-    router.push('/auth/login');
-  };
+ const handleLogin = () => {
+  router.push('/auth/login');
+};
+
+const handleLoginClick = async () => {
+  setLoadingAction("login");
+  await handleLogin();
+  setLoadingAction(null);
+};
+
 
   return (
     <header className="bg-white shadow-lg sticky top-0 z-50 w-full">
@@ -204,38 +215,49 @@ export default function ProfessionalNavbar() {
               </a>
               
               {/* Mobile authentication section */}
-              <hr className="my-4" />
-              {session ? (
-                <>
-                  <Link 
-                    href="/my-orders" 
-                    className="block text-gray-700 hover:text-blue-600 py-2 cursor-pointer transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Orders
-                  </Link>
-                  <Link 
-                    href="/chat" 
-                    className="block text-gray-700 hover:text-blue-600 py-2 cursor-pointer transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Chat with Sellers
-                  </Link>
+              <hr className="my-4 border-gray-200" />
+
+                {session ? (
+                  <>
+                    <Link 
+                      href="/my-orders" 
+                      className="block text-gray-700 hover:text-blue-600 py-2 transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Orders
+                    </Link>
+
+                    <Link 
+                      href="/chat" 
+                      className="block text-gray-700 hover:text-blue-600 py-2 transition-colors"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      Chat with Sellers
+                    </Link>
+
+                    <button
+                      onClick={handleLogoutClick}
+                      disabled={loadingAction === "logout"}
+                      className={`flex items-center gap-2 text-left text-gray-700 hover:text-blue-600 py-2 transition-colors ${
+                        loadingAction === "logout" ? "opacity-60 cursor-not-allowed" : ""
+                      }`}
+                    >
+                      {loadingAction === "logout" && <Loader2 className="animate-spin w-4 h-4" />}
+                      Logout
+                    </button>
+                  </>
+                ) : (
                   <button
-                    onClick={handleSignOut}
-                    className="block text-left text-gray-700 hover:text-blue-600 py-2 cursor-pointer transition-colors"
+                    onClick={handleLoginClick}
+                    disabled={loadingAction === "login"}
+                    className={`flex items-center gap-2 text-left text-gray-700 hover:text-blue-600 py-2 transition-colors ${
+                      loadingAction === "login" ? "opacity-60 cursor-not-allowed" : ""
+                    }`}
                   >
-                    Logout
+                    {loadingAction === "login" && <Loader2 className="animate-spin w-4 h-4" />}
+                    Login
                   </button>
-                </>
-              ) : (
-                <button
-                  onClick={handleLogin}
-                  className="block text-left text-gray-700 hover:text-blue-600 py-2 cursor-pointer transition-colors"
-                >
-                  Login
-                </button>
-              )}
+                )}
             </nav>
           </div>
         </div>

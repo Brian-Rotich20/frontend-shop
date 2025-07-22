@@ -4,6 +4,7 @@ import { useState, useEffect, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { signIn, useSession } from "next-auth/react";
 import toast from 'react-hot-toast';
+import { Eye, EyeOff } from 'lucide-react';
 
 function GoogleIcon() {
   return (
@@ -13,6 +14,18 @@ function GoogleIcon() {
       <path fill="#FBBC05" d="M121.4 326.5c-10.8-32.3-10.8-66.9 0-99.2V157.8H33c-43.2 85.3-43.2 186.2 0 271.5l88.4-69.5z" />
       <path fill="#EA4335" d="M272 107.7c39.4-.6 77.4 14.5 106.4 42.3l79.4-79.4C408.9 24.6 342.4-1.5 272 0 168.7 0 78.6 69.2 33 157.8l88.4 69.5C142.7 154.9 202 107.7 272 107.7z" />
     </svg>
+  );
+}
+
+function CompanyLogo() {
+  return (
+    <div className="flex items-center justify-center mb-6">
+      <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl flex items-center justify-center shadow-lg">
+        <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
+          <div className="w-4 h-4 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-sm"></div>
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -32,6 +45,8 @@ function RegisterForm() {
 
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   // Handle redirect for authenticated users
   useEffect(() => {
@@ -103,21 +118,29 @@ function RegisterForm() {
 
   if (status === 'loading') {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div>Loading...</div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
+        <div className="animate-pulse">
+          <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl mx-auto mb-4"></div>
+          <div className="text-slate-600">Loading...</div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center px-4">
-      <div className="bg-white w-full max-w-md rounded-xl shadow-md p-6">
-        <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Create Account</h2>
+    <div className="min-h-screen bg-gradient-to-br from-gray-100 via-gray-200 to-gray-300 flex items-center justify-center p-4 sm:p-6">
+      <div className="bg-white/80 backdrop-blur-sm w-full max-w-md rounded-2xl shadow-xl border border-white/20 p-6 sm:p-8">
+        <CompanyLogo />
+        
+        <div className="text-center mb-8">
+          <h2 className="text-2xl sm:text-3xl font-bold text-slate-800 mb-2">Create Account</h2>
+          <p className="text-slate-600 text-sm">Join us and get started today</p>
+        </div>
 
         <button
           onClick={handleGoogleSignUp}
           disabled={loading}
-          className="w-full flex items-center justify-center border border-gray-300 rounded-lg py-2 text-sm mb-6 hover:bg-gray-50 disabled:opacity-50"
+          className="w-full flex items-center justify-center border border-slate-200 rounded-xl py-3 px-4 text-sm mb-6 hover:bg-slate-50 disabled:opacity-50 transition-all duration-200 hover:shadow-md active:scale-[0.98]"
         >
           <GoogleIcon />
           Sign up with Google
@@ -125,84 +148,131 @@ function RegisterForm() {
 
         <div className="relative mb-6">
           <div className="absolute inset-0 flex items-center">
-            <div className="w-full border-t border-gray-300" />
+            <div className="w-full border-t border-slate-200" />
           </div>
           <div className="relative flex justify-center text-sm">
-            <span className="px-2 bg-white text-gray-500">Or register with email</span>
+            <span className="px-4 bg-white text-slate-500">Or register with email</span>
           </div>
         </div>
 
         {error && (
-          <div className="bg-red-100 text-red-700 px-4 py-2 rounded text-sm mb-4 text-center">
+          <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl text-sm mb-6 text-center">
             {error}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          <input
-            type="email"
-            value={form.email}
-            onChange={handleChange('email')}
-            placeholder="Email"
-            required
-            disabled={loading}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none disabled:opacity-50"
-          />
-          <input
-            type="text"
-            value={form.phone_number}
-            onChange={handleChange('phone_number')}
-            placeholder="Phone Number"
-            required
-            disabled={loading}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none disabled:opacity-50"
-          />
-          <input
-            type="text"
-            value={form.username}
-            onChange={handleChange('username')}
-            placeholder="Username (optional)"
-            disabled={loading}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none disabled:opacity-50"
-          />
-          <input
-            type="password"
-            value={form.password}
-            onChange={handleChange('password')}
-            placeholder="Password"
-            required
-            disabled={loading}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none disabled:opacity-50"
-          />
-          <input
-            type="password"
-            value={form.password_confirm}
-            onChange={handleChange('password_confirm')}
-            placeholder="Confirm Password"
-            required
-            disabled={loading}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-green-500 focus:outline-none disabled:opacity-50"
-          />
+          <div>
+            <input
+              type="email"
+              value={form.email}
+              onChange={handleChange('email')}
+              placeholder="Email address"
+              required
+              disabled={loading}
+              className="w-full px-4 py-3 border border-slate-200 rounded-xl shadow-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none disabled:opacity-50 transition-all duration-200 text-base"
+            />
+          </div>
+
+          <div>
+            <input
+              type="tel"
+              value={form.phone_number}
+              onChange={handleChange('phone_number')}
+              placeholder="Phone number"
+              required
+              disabled={loading}
+              className="w-full px-4 py-3 border border-slate-200 rounded-xl shadow-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none disabled:opacity-50 transition-all duration-200 text-base"
+            />
+          </div>
+
+          <div>
+            <input
+              type="text"
+              value={form.username}
+              onChange={handleChange('username')}
+              placeholder="Username (optional)"
+              disabled={loading}
+              className="w-full px-4 py-3 border border-slate-200 rounded-xl shadow-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none disabled:opacity-50 transition-all duration-200 text-base"
+            />
+          </div>
+
+          <div className="relative">
+            <input
+              type={showPassword ? "text" : "password"}
+              value={form.password}
+              onChange={handleChange('password')}
+              placeholder="Password"
+              required
+              disabled={loading}
+              className="w-full px-4 py-3 pr-12 border border-slate-200 rounded-xl shadow-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none disabled:opacity-50 transition-all duration-200 text-base"
+            />
+            <button
+              type="button"
+              onClick={() => setShowPassword(!showPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none p-1"
+              disabled={loading}
+            >
+              {showPassword ? (
+                <EyeOff className="w-5 h-5" />
+              ) : (
+                <Eye className="w-5 h-5" />
+              )}
+            </button>
+          </div>
+
+          <div className="relative">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              value={form.password_confirm}
+              onChange={handleChange('password_confirm')}
+              placeholder="Confirm password"
+              required
+              disabled={loading}
+              className="w-full px-4 py-3 pr-12 border border-slate-200 rounded-xl shadow-sm focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 focus:outline-none disabled:opacity-50 transition-all duration-200 text-base"
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-slate-400 hover:text-slate-600 focus:outline-none p-1"
+              disabled={loading}
+            >
+              {showConfirmPassword ? (
+                <EyeOff className="w-5 h-5" />
+              ) : (
+                <Eye className="w-5 h-5" />
+              )}
+            </button>
+          </div>
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-green-600 text-white py-3 rounded-lg font-semibold text-sm hover:bg-green-700 transition disabled:opacity-50"
+            className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white py-3 px-4 rounded-xl font-semibold text-base hover:from-emerald-700 hover:to-teal-700 transition-all duration-200 disabled:opacity-50 hover:shadow-lg active:scale-[0.98] mt-6"
           >
-            {loading ? 'Creating Account...' : 'Create Account'}
+            {loading ? (
+              <div className="flex items-center justify-center">
+                <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-2"></div>
+                Creating Account...
+              </div>
+            ) : (
+              'Create Account'
+            )}
           </button>
         </form>
 
-        <p className="text-sm text-center text-gray-600 mt-4">
-          Already have an account?{' '}
-          <button
-            onClick={() => router.push(`/auth/login?next=${encodeURIComponent(next)}`)}
-            className="text-green-600 hover:underline"
-            disabled={loading}
-          >
-            Log in
-          </button>
-        </p>
+        <div className="text-center mt-6 pt-6 border-t border-slate-100">
+          <p className="text-sm text-slate-600">
+            Already have an account?{' '}
+            <button
+              onClick={() => router.push(`/auth/login?next=${encodeURIComponent(next)}`)}
+              className="text-emerald-600 hover:text-emerald-700 font-semibold hover:underline transition-colors duration-200"
+              disabled={loading}
+            >
+              Sign in
+            </button>
+          </p>
+        </div>
       </div>
     </div>
   );
@@ -211,8 +281,11 @@ function RegisterForm() {
 export default function RegisterPage() {
   return (
     <Suspense fallback={
-      <div className="min-h-screen flex items-center justify-center">
-        <div>Loading registration...</div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100">
+        <div className="animate-pulse">
+          <div className="w-16 h-16 bg-gradient-to-br from-emerald-500 to-teal-600 rounded-2xl mx-auto mb-4"></div>
+          <div className="text-slate-600">Loading registration...</div>
+        </div>
       </div>
     }>
       <RegisterForm />
