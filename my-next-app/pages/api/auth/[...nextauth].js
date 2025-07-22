@@ -101,7 +101,7 @@ export default NextAuth({
       };
     },
 
-    async signIn({ user, account, profile }) {
+    async signIn() {
       // Allow all sign-ins - handle validation in the authorize function
       return true;
     },
