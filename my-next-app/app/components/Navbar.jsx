@@ -66,7 +66,7 @@ export default function ProfessionalNavbar({handleSignOut}) {
               </svg>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">ShopHub</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Inova</h1>
               <p className="text-xs text-gray-500 -mt-1">Your Shop</p>
             </div>
           </div>
@@ -238,7 +238,7 @@ export default function ProfessionalNavbar({handleSignOut}) {
                   </svg>
                 </div>
                 <div>
-                  <h1 className="text-lg font-bold text-gray-900">ShopHub</h1>
+                  <h1 className="text-lg font-bold text-gray-900">Inova</h1>
                   <p className="text-xs text-gray-500 -mt-1">Your Shop</p>
                 </div>
               </div>

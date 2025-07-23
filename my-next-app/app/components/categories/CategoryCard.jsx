@@ -1,5 +1,4 @@
-// Receives props: name, image, maybe slug
-// - Displays a styled card/grid element
+
 import Link from 'next/link';
 
 export default function CategoryCard({ category }) {
