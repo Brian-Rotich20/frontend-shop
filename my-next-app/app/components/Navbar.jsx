@@ -215,7 +215,7 @@ export default function ProfessionalNavbar({handleSignOut}) {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40" onClick={() => setIsMenuOpen(false)}>
+        <div className="md:hidden fixed inset-0 bg-opacity-50 z-40" onClick={() => setIsMenuOpen(false)}>
           <div 
             className="absolute right-0 top-0 h-full w-3/4 bg-white shadow-2xl overflow-y-auto"
             onClick={(e) => e.stopPropagation()}
