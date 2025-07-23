@@ -52,7 +52,7 @@ function RegisterForm() {
   useEffect(() => {
     if (status === 'authenticated' && session) {
       if (session.user.isNewUser || !session.user.phone_number) {
-        router.push('/complete-profile');
+        router.push('/');
       } else {
         router.push(next);
       }
