@@ -66,7 +66,7 @@ function RegisterForm() {
   const handleGoogleSignUp = async () => {
     try {
       await signIn("google", { 
-        callbackUrl: '/complete-profile'
+        callbackUrl: '/'
       });
     } catch (error) {
       console.error('Google sign up error:', error);
