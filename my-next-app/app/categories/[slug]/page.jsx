@@ -15,7 +15,7 @@ const getImageUrl = (path) => {
 };
 
 export default function CategoryDetailPage() {
-  const { slug } = useParams(); // If you're using app router
+  const { slug } = useParams(); 
   const [category, setCategory] = useState(null);
 
   useEffect(() => {

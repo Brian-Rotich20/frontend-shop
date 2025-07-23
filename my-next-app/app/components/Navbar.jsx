@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link'
 import { signOut, useSession } from 'next-auth/react'
 import { Loader2 } from 'lucide-react'; 
+import SearchBar from './SearchBar';
 
 export default function ProfessionalNavbar({handleSignOut}) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
@@ -72,18 +73,7 @@ export default function ProfessionalNavbar({handleSignOut}) {
           </div>
 
           {/*----- Search bar ----*/}
-          <div className="hidden md:flex flex-1 max-w-2xl mx-8">
-            <div className="relative w-full">
-              <input
-                type="text"
-                placeholder="Search for products, categories and more..."
-                className="w-full pl-4 pr-12 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-transparent"
-              />
-              <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-orange-600 text-white p-2 rounded-lg hover:bg-oranage-700 transition-colors cursor-pointer">
-                <Search className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
+         <SearchBar isMobile={false} />
 
           {/*--------- Right side icons---------- */}
           <div className="flex items-center space-x-4">
@@ -199,18 +189,7 @@ export default function ProfessionalNavbar({handleSignOut}) {
         </div>
 
         {/* Mobile search */}
-        <div className="md:hidden py-3 border-t border-gray-200">
-          <div className="relative">
-            <input
-              type="text"
-              placeholder="Search products..."
-              className="w-full pl-4 pr-12 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-            <button className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-400 cursor-pointer hover:text-blue-600 transition-colors">
-              <Search className="w-5 h-5" />
-            </button>
-          </div>
-        </div>
+        <SearchBar isMobile={true} />
       </div>
 
       {/* Mobile menu */}
