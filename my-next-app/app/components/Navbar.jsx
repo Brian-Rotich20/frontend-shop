@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Search, ShoppingCart, User, Menu, X, Heart, ChevronDown } from 'lucide-react'
+import { Search, ShoppingCart, User, Menu, X, Heart, ChevronDown, LayoutGrid } from 'lucide-react'
 import { useCart } from '../context/CartContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link'
@@ -16,25 +16,33 @@ export default function ProfessionalNavbar({handleSignOut}) {
   const { data: session } = useSession();
   const [loadingAction, setLoadingAction] = useState(null);
 
-
-
-
   const handleLogoutClick = async () => {
     setLoadingAction("logout");
-    await handleSignOut();
-    setLoadingAction(null);
+    try {
+      if (handleSignOut) {
+        await handleSignOut();
+      } else {
+        await signOut();
+      }
+    } finally {
+      setLoadingAction(null);
+      setIsProfileOpen(false);
+    }
   };
 
- const handleLogin = () => {
-  router.push('/auth/login');
-};
+  const handleLogin = () => {
+    router.push('/auth/login');
+  };
 
-const handleLoginClick = async () => {
-  setLoadingAction("login");
-  await handleLogin();
-  setLoadingAction(null);
-};
-
+  const handleLoginClick = async () => {
+    setLoadingAction("login");
+    try {
+      await handleLogin();
+    } finally {
+      setLoadingAction(null);
+      setIsProfileOpen(false);
+    }
+  };
 
   return (
     <header className="bg-white shadow-lg sticky top-0 z-50 w-full">
@@ -58,7 +66,7 @@ const handleLoginClick = async () => {
               </svg>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">ShopHub</h1>
+              <h1 className="text-2xl font-bold text-gray-900">Inova</h1>
               <p className="text-xs text-gray-500 -mt-1">Your Shop</p>
             </div>
           </div>
@@ -84,7 +92,13 @@ const handleLoginClick = async () => {
               <Heart className="w-5 h-5" />
               <span className="text-sm">Wishlist</span>
             </button>
-
+            <Link
+              href="/categories"
+              className="hidden md:flex items-center text-gray-700 hover:text-orange-600 transition-colors cursor-pointer"
+            >
+              <span className="text-sm">Categories</span>
+              <LayoutGrid className="w-5 h-5 space-x-1" />
+            </Link>
             {/* Cart */}
             <button
               onClick={() => router.push('/cart')}
@@ -113,9 +127,9 @@ const handleLoginClick = async () => {
               </button>
               
               {isProfileOpen && (
-                <div className="absolute right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border z-10">
-                  <div className="py-2">
-                    <div className="px-4 py-2 text-sm font-medium text-gray-900 border-b border-gray-100">
+                <div className="absolute right-0 mt-2 w-52 bg-white rounded-lg shadow-xl border border-gray-100 z-10 overflow-hidden">
+                  <div className="py-1">
+                    <div className="px-4 py-3 text-sm font-semibold text-gray-900 bg-gray-50 border-b border-gray-100">
                       My Account
                     </div>
                     
@@ -124,33 +138,49 @@ const handleLoginClick = async () => {
                       <>
                         <Link 
                           href="/my-orders" 
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors"
+                          className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 cursor-pointer transition-all duration-200"
                           onClick={() => setIsProfileOpen(false)}
                         >
-                          Orders
+                          <span>My Orders</span>
                         </Link>
                         <Link 
                           href="/chat" 
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors"
+                          className="flex items-center px-4 py-3 text-sm text-gray-700 hover:bg-orange-50 hover:text-orange-600 cursor-pointer transition-all duration-200"
                           onClick={() => setIsProfileOpen(false)}
                         >
-                          Chat with Sellers
+                          <span>Chat with Sellers</span>
                         </Link>
-                        <hr className="my-1" />
+                        <div className="border-t border-gray-100 my-1"></div>
                         <button
-                          onClick={handleSignOut}
-                          className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors"
+                          onClick={handleLogoutClick}
+                          disabled={loadingAction === "logout"}
+                          className={`flex items-center justify-between w-full px-4 py-3 text-sm text-left transition-all duration-200 ${
+                            loadingAction === "logout" 
+                              ? "text-gray-400 cursor-not-allowed bg-gray-50" 
+                              : "text-red-600 hover:bg-red-50 hover:text-red-700 cursor-pointer"
+                          }`}
                         >
-                          Logout
+                          <span>Logout</span>
+                          {loadingAction === "logout" && (
+                            <Loader2 className="animate-spin w-4 h-4 ml-2" />
+                          )}
                         </button>
                       </>
                     ) : (
                       // Non-authenticated user options
                       <button
-                        onClick={handleLogin}
-                        className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer transition-colors"
+                        onClick={handleLoginClick}
+                        disabled={loadingAction === "login"}
+                        className={`flex items-center justify-between w-full px-4 py-3 text-sm text-left transition-all duration-200 ${
+                          loadingAction === "login" 
+                            ? "text-gray-400 cursor-not-allowed bg-gray-50" 
+                            : "text-orange-600 hover:bg-orange-50 hover:text-orange-700 cursor-pointer font-medium"
+                        }`}
                       >
-                        Login
+                        <span>Login to Account</span>
+                        {loadingAction === "login" && (
+                          <Loader2 className="animate-spin w-4 h-4 ml-2" />
+                        )}
                       </button>
                     )}
                   </div>
@@ -185,79 +215,68 @@ const handleLoginClick = async () => {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200">
-          <div className="container mx-auto px-4 py-4">
-            <nav className="space-y-4">
-              {categories.map((category, index) => (
-                <a
-                  key={index}
-                  href="#"
-                  className="block text-gray-700 hover:text-blue-600 font-medium py-2 cursor-pointer transition-colors"
-                >
-                  {category}
-                </a>
-              ))}
+        <div className="md:hidden bg-white border-t border-gray-200 flex items-center justify-center h-full">
+          <div className="container mx-auto px-6 py-3">
+            <nav className="space-y-2 flex flex-col items-center">
               <a
                 href="#"
-                className="block text-red-600 font-semibold hover:text-red-700 py-2 cursor-pointer transition-colors"
+                className="block text-red-600 font-semibold hover:text-red-700 py-1.5 cursor-pointer transition-colors"
               >
                 Sale
               </a>
-              <hr className="my-4" />
-              <a href="#" className="block text-gray-700 hover:text-blue-600 py-2 cursor-pointer transition-colors">
+              
+              <hr className="w-full border-gray-200 my-2" />
+              
+              <a href="#" className="block text-gray-700 hover:text-blue-600 py-1.5 cursor-pointer transition-colors">
                 Wishlist
               </a>
-              <a href="#" className="block text-gray-700 hover:text-blue-600 py-2 cursor-pointer transition-colors">
+              <a href="#" className="block text-gray-700 hover:text-blue-600 py-1.5 cursor-pointer transition-colors">
                 Track Order
               </a>
-              <a href="#" className="block text-gray-700 hover:text-blue-600 py-2 cursor-pointer transition-colors">
-                Help
-              </a>
               
-              {/* Mobile authentication section */}
-              <hr className="my-4 border-gray-200" />
+              <hr className="w-full border-gray-200 my-2" />
 
-                {session ? (
-                  <>
-                    <Link 
-                      href="/my-orders" 
-                      className="block text-gray-700 hover:text-blue-600 py-2 transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Orders
-                    </Link>
+              {session ? (
+                <>
+                  <Link 
+                    href="/my-orders" 
+                    className="block text-gray-700 hover:text-blue-600 py-1.5 transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Orders
+                  </Link>
 
-                    <Link 
-                      href="/chat" 
-                      className="block text-gray-700 hover:text-blue-600 py-2 transition-colors"
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      Chat with Sellers
-                    </Link>
+                  <Link 
+                    href="/chat" 
+                    className="block text-gray-700 hover:text-blue-600 py-1.5 transition-colors"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Chat with Sellers
+                  </Link>
 
-                    <button
-                      onClick={handleLogoutClick}
-                      disabled={loadingAction === "logout"}
-                      className={`flex items-center gap-2 text-left text-gray-700 hover:text-blue-600 py-2 transition-colors ${
-                        loadingAction === "logout" ? "opacity-60 cursor-not-allowed" : ""
-                      }`}
-                    >
-                      {loadingAction === "logout" && <Loader2 className="animate-spin w-4 h-4" />}
-                      Logout
-                    </button>
-                  </>
-                ) : (
                   <button
-                    onClick={handleLoginClick}
-                    disabled={loadingAction === "login"}
-                    className={`flex items-center gap-2 text-left text-gray-700 hover:text-blue-600 py-2 transition-colors ${
-                      loadingAction === "login" ? "opacity-60 cursor-not-allowed" : ""
+                    onClick={handleLogoutClick}
+                    disabled={loadingAction === "logout"}
+                    className={`flex items-center gap-2 text-left text-gray-700 hover:text-blue-600 py-1.5 transition-colors ${
+                      loadingAction === "logout" ? "opacity-60 cursor-not-allowed" : ""
                     }`}
                   >
-                    {loadingAction === "login" && <Loader2 className="animate-spin w-4 h-4" />}
-                    Login
+                    {loadingAction === "logout" && <Loader2 className="animate-spin w-4 h-4" />}
+                    Logout
                   </button>
-                )}
+                </>
+              ) : (
+                <button
+                  onClick={handleLoginClick}
+                  disabled={loadingAction === "login"}
+                  className={`flex items-center gap-2 text-left text-gray-700 hover:text-blue-600 py-1.5 transition-colors ${
+                    loadingAction === "login" ? "opacity-60 cursor-not-allowed" : ""
+                  }`}
+                >
+                  {loadingAction === "login" && <Loader2 className="animate-spin w-4 h-4" />}
+                  Login
+                </button>
+              )}
             </nav>
           </div>
         </div>

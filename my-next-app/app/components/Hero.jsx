@@ -76,13 +76,13 @@ const EcommerceHero = () => {
 
               {/* CTA Buttons */}
               <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
-                <button className="group relative px-8 py-4 bg-gradient-to-r from-orange-500 to-orange-900 hover:from-orange-700 hover:to-orange-800 text-white font-semibold rounded-full transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 shadow-lg hover:shadow-orange-900/50">
+                <button className="group relative px-8 py-2 bg-gradient-to-r from-orange-500 to-orange-900 hover:from-orange-700 hover:to-orange-800 text-white font-semibold rounded-full transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 shadow-lg hover:shadow-orange-900/50">
                   <span className="relative z-10">Shop Now</span>
                   <div className="absolute inset-0 bg-gradient-to-r from-orange-600 to-orange-700 rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </button>
                 
                 <button 
-                  className="px-8 py-4 border border-white/20 text-white font-semibold rounded-full transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 hover:bg-white/10"
+                  className="px-8 py-3 border border-white/20 text-white font-semibold rounded-full transition-all duration-300 transform hover:scale-105 hover:-translate-y-1 hover:bg-white/10"
                   style={{
                     backdropFilter: 'blur(16px) saturate(180%)',
                     WebkitBackdropFilter: 'blur(16px) saturate(180%)',

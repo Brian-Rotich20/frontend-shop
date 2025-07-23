@@ -14,7 +14,7 @@ import TopLoadingBar from './components/TopLoadingBar';
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="overflow-x-hidden">
+      <body className="overflow-x-hidden font-montserrat">
         <Toaster position="top-center" />
         <ToastProvider>
             <LoadingProvider>
