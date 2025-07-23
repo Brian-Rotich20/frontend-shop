@@ -236,7 +236,7 @@ const handleCheckout = () => {
                     
                     <div className="flex-1 min-w-0">
                       <h3 className="text-sm font-medium text-gray-900 truncate">{item.product.name}</h3>
-                      <p className="text-sm text-gray-600">${item.product.price}</p>
+                      <p className="text-sm text-gray-600">Ksh{item.product.price}</p>
                     </div>
                     
                     <div className="flex items-center space-x-2 mx-4">
@@ -257,7 +257,7 @@ const handleCheckout = () => {
                     </div>
                     
                     <div className="text-right min-w-[4rem] mr-3">
-                      <p className="text-sm font-medium text-gray-900">${item.sub_total}</p>
+                      <p className="text-sm font-medium text-gray-900">Ksh{item.sub_total}</p>
                     </div>
                     
                     <button 

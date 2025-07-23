@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState } from 'react'
-import { Search, ShoppingCart, User, Menu, X, Heart, ChevronDown, LayoutGrid } from 'lucide-react'
+import { Search, ShoppingCart, User, Menu, X, Heart, ChevronDown, LayoutGrid, Smartphone, Monitor, Headphones, Dumbbell, Gamepad2, TreePine, MessageCircle, HelpCircle, Phone, Sparkles } from 'lucide-react'
 import { useCart } from '../context/CartContext';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link'
@@ -66,7 +66,7 @@ export default function ProfessionalNavbar({handleSignOut}) {
               </svg>
             </div>
             <div>
-              <h1 className="text-2xl font-bold text-gray-900">Inova</h1>
+              <h1 className="text-2xl font-bold text-gray-900">ShopHub</h1>
               <p className="text-xs text-gray-500 -mt-1">Your Shop</p>
             </div>
           </div>
@@ -215,69 +215,181 @@ export default function ProfessionalNavbar({handleSignOut}) {
 
       {/* Mobile menu */}
       {isMenuOpen && (
-        <div className="md:hidden bg-white border-t border-gray-200 flex items-center justify-center h-full">
-          <div className="container mx-auto px-6 py-3">
-            <nav className="space-y-2 flex flex-col items-center">
-              <a
-                href="#"
-                className="block text-red-600 font-semibold hover:text-red-700 py-1.5 cursor-pointer transition-colors"
+        <div className="md:hidden fixed inset-0 bg-black bg-opacity-50 z-40" onClick={() => setIsMenuOpen(false)}>
+          <div 
+            className="absolute right-0 top-0 h-full w-3/4 bg-white shadow-2xl overflow-y-auto"
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Header */}
+            <div className="flex items-center justify-between p-4 border-b border-gray-200">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    className="w-5 h-5 text-white"
+                    viewBox="0 0 24 24"
+                  >
+                    <path d="M3 3h2l.4 2M7 13h10l4-8H5.4m1.6 8L5 3H3m4 10v6a1 1 0 001 1h10a1 1 0 001-1v-6m-16 0h16"></path>
+                  </svg>
+                </div>
+                <div>
+                  <h1 className="text-lg font-bold text-gray-900">ShopHub</h1>
+                  <p className="text-xs text-gray-500 -mt-1">Your Shop</p>
+                </div>
+              </div>
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="p-2 text-gray-500 hover:text-gray-700"
               >
-                Sale
-              </a>
-              
-              <hr className="w-full border-gray-200 my-2" />
-              
-              <a href="#" className="block text-gray-700 hover:text-blue-600 py-1.5 cursor-pointer transition-colors">
-                Wishlist
-              </a>
-              <a href="#" className="block text-gray-700 hover:text-blue-600 py-1.5 cursor-pointer transition-colors">
-                Track Order
-              </a>
-              
-              <hr className="w-full border-gray-200 my-2" />
+                <X className="w-5 h-5" />
+              </button>
+            </div>
 
-              {session ? (
-                <>
-                  <Link 
-                    href="/my-orders" 
-                    className="block text-gray-700 hover:text-blue-600 py-1.5 transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Orders
-                  </Link>
+            {/* Menu Content */}
+            <div className="p-4">
+              <nav className="space-y-1">
+                {/* Main Actions */}
+                <a
+                  href="#"
+                  className="flex items-center space-x-3 text-red-600 font-semibold hover:text-red-700 py-2 px-3 rounded-lg hover:bg-red-50 cursor-pointer transition-all text-sm"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>Sale</span>
+                </a>
+                
+                <hr className="my-3 border-gray-200" />
+                
+                <a href="#" className="flex items-center space-x-3 text-gray-700 hover:text-orange-600 py-2 px-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all text-sm">
+                  <Heart className="w-4 h-4" />
+                  <span>Wishlist</span>
+                </a>
+                <a href="#" className="flex items-center space-x-3 text-gray-700 hover:text-orange-600 py-2 px-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all text-sm">
+                  <Search className="w-4 h-4" />
+                  <span>Track Order</span>
+                </a>
+                
+                <hr className="my-3 border-gray-200" />
+                
+                {/* Categories Section */}
+                <div className="mb-3">
+                  <h3 className="text-xs font-bold text-gray-900 uppercase tracking-wide mb-2 px-3">Our Categories</h3>
+                  <div className="space-y-1">
+                    <a href="#" className="flex items-center space-x-3 text-gray-700 hover:text-orange-600 py-2 px-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all text-sm">
+                      <Heart className="w-4 h-4" />
+                      <span>Health &amp; Beauty</span>
+                    </a>
+                    <a href="#" className="flex items-center space-x-3 text-gray-700 hover:text-orange-600 py-2 px-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all text-sm">
+                      <LayoutGrid className="w-4 h-4" />
+                      <span>Home &amp; Office</span>
+                    </a>
+                    <a href="#" className="flex items-center space-x-3 text-gray-700 hover:text-orange-600 py-2 px-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all text-sm">
+                      <Smartphone className="w-4 h-4" />
+                      <span>Phone &amp; Tablets</span>
+                    </a>
+                    <a href="#" className="flex items-center space-x-3 text-gray-700 hover:text-orange-600 py-2 px-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all text-sm">
+                      <Monitor className="w-4 h-4" />
+                      <span>Computing</span>
+                    </a>
+                    <a href="#" className="flex items-center space-x-3 text-gray-700 hover:text-orange-600 py-2 px-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all text-sm">
+                      <Headphones className="w-4 h-4" />
+                      <span>Electronics</span>
+                    </a>
+                    <a href="#" className="flex items-center space-x-3 text-gray-700 hover:text-orange-600 py-2 px-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all text-sm">
+                      <Dumbbell className="w-4 h-4" />
+                      <span>Sporting Goods</span>
+                    </a>
+                    <a href="#" className="flex items-center space-x-3 text-gray-700 hover:text-orange-600 py-2 px-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all text-sm">
+                      <Gamepad2 className="w-4 h-4" />
+                      <span>Gaming</span>
+                    </a>
+                    <a href="#" className="flex items-center space-x-3 text-gray-700 hover:text-orange-600 py-2 px-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all text-sm">
+                      <TreePine className="w-4 h-4" />
+                      <span>Garden &amp; Outdoors</span>
+                    </a>
+                  </div>
+                </div>
+                
+                <hr className="my-3 border-gray-200" />
+                
+                {/* Support Section */}
+                <a href="#" className="flex items-center space-x-3 text-gray-700 hover:text-orange-600 py-2 px-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all text-sm">
+                  <MessageCircle className="w-4 h-4" />
+                  <span>Chat with Seller</span>
+                </a>
+                <a href="#" className="flex items-center space-x-3 text-gray-700 hover:text-orange-600 py-2 px-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all text-sm">
+                  <HelpCircle className="w-4 h-4" />
+                  <span>Help Center</span>
+                </a>
+                <a href="#" className="flex items-center space-x-3 text-gray-700 hover:text-orange-600 py-2 px-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all text-sm">
+                  <Phone className="w-4 h-4" />
+                  <span>Contact Us</span>
+                </a>
+                
+                <hr className="my-3 border-gray-200" />
 
-                  <Link 
-                    href="/chat" 
-                    className="block text-gray-700 hover:text-blue-600 py-1.5 transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Chat with Sellers
-                  </Link>
+                {/* Authentication Section */}
+                {session ? (
+                  <>
+                    <Link 
+                      href="/my-orders" 
+                      className="flex items-center space-x-3 text-gray-700 hover:text-orange-600 py-2 px-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all text-sm"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <ShoppingCart className="w-4 h-4" />
+                      <span>Orders</span>
+                    </Link>
 
+                    <Link 
+                      href="/chat" 
+                      className="flex items-center space-x-3 text-gray-700 hover:text-orange-600 py-2 px-3 rounded-lg hover:bg-gray-50 cursor-pointer transition-all text-sm"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <MessageCircle className="w-4 h-4" />
+                      <span>Chat with Sellers</span>
+                    </Link>
+
+                    <button
+                      onClick={handleLogoutClick}
+                      disabled={loadingAction === "logout"}
+                      className={`flex items-center space-x-3 w-full text-left py-2 px-3 rounded-lg transition-all text-sm ${
+                        loadingAction === "logout" 
+                          ? "opacity-60 cursor-not-allowed text-gray-400" 
+                          : "text-red-600 hover:text-red-700 hover:bg-red-50 cursor-pointer"
+                      }`}
+                    >
+                      {loadingAction === "logout" ? (
+                        <Loader2 className="animate-spin w-4 h-4" />
+                      ) : (
+                        <User className="w-4 h-4" />
+                      )}
+                      <span>Logout</span>
+                    </button>
+                  </>
+                ) : (
                   <button
-                    onClick={handleLogoutClick}
-                    disabled={loadingAction === "logout"}
-                    className={`flex items-center gap-2 text-left text-gray-700 hover:text-blue-600 py-1.5 transition-colors ${
-                      loadingAction === "logout" ? "opacity-60 cursor-not-allowed" : ""
+                    onClick={handleLoginClick}
+                    disabled={loadingAction === "login"}
+                    className={`flex items-center space-x-3 w-full text-left py-2 px-3 rounded-lg transition-all text-sm ${
+                      loadingAction === "login" 
+                        ? "opacity-60 cursor-not-allowed text-gray-400" 
+                        : "text-orange-600 hover:text-orange-700 hover:bg-orange-50 cursor-pointer font-medium"
                     }`}
                   >
-                    {loadingAction === "logout" && <Loader2 className="animate-spin w-4 h-4" />}
-                    Logout
+                    {loadingAction === "login" ? (
+                      <Loader2 className="animate-spin w-4 h-4" />
+                    ) : (
+                      <User className="w-4 h-4" />
+                    )}
+                    <span>Login</span>
                   </button>
-                </>
-              ) : (
-                <button
-                  onClick={handleLoginClick}
-                  disabled={loadingAction === "login"}
-                  className={`flex items-center gap-2 text-left text-gray-700 hover:text-blue-600 py-1.5 transition-colors ${
-                    loadingAction === "login" ? "opacity-60 cursor-not-allowed" : ""
-                  }`}
-                >
-                  {loadingAction === "login" && <Loader2 className="animate-spin w-4 h-4" />}
-                  Login
-                </button>
-              )}
-            </nav>
+                )}
+              </nav>
+            </div>
           </div>
         </div>
       )}
