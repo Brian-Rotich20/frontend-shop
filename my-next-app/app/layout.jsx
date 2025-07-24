@@ -14,7 +14,7 @@ import TopLoadingBar from './components/TopLoadingBar';
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className="overflow-x-hidden font-montserrat">
+      <body className="overflow-x-hidden font-montserrat min-h-screen flex flex-col">
         <Toaster position="top-center" />
         <ToastProvider>
             <LoadingProvider>
@@ -22,7 +22,9 @@ export default function RootLayout({ children }) {
             <CartProvider>
               <Navbar />
               <TopLoadingBar />
-              {children}
+              <main className="flex-grow">
+                  {children}
+                </main>
               <Footer />
             </CartProvider>
           </SessionProvider>

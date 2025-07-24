@@ -1,11 +1,11 @@
 'use client'
 
+import { Suspense, useEffect, useState } from 'react'
 import { useSearchParams } from 'next/navigation'
-import { useEffect, useState } from 'react'
 import ProductCard from '@/components/ProductCard'
 import { Loader2 } from 'lucide-react'
 
-export default function SearchResults() {
+function SearchResults() {
   const searchParams = useSearchParams()
   const query = searchParams.get('query')
   const [results, setResults] = useState([])
@@ -17,7 +17,9 @@ export default function SearchResults() {
     const fetchResults = async () => {
       setLoading(true)
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/search?query=${query}`)
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/search?query=${query}`
+        )
         if (!res.ok) throw new Error('Failed to fetch')
         const data = await res.json()
         setResults(data)
@@ -42,7 +44,7 @@ export default function SearchResults() {
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <h1 className="text-xl font-semibold mb-4">Search results for "{query}"</h1>
+      <h1 className="text-xl font-semibold mb-4">{query}</h1>
       {results.length === 0 ? (
         <p>No products found.</p>
       ) : (
@@ -53,5 +55,20 @@ export default function SearchResults() {
         </div>
       )}
     </div>
+  )
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense
+      fallback={
+        <div className="flex justify-center items-center py-16">
+          <Loader2 className="h-6 w-6 animate-spin text-orange-600" />
+          <span className="ml-2 text-gray-600">Loading search...</span>
+        </div>
+      }
+    >
+      <SearchResults />
+    </Suspense>
   )
 }
