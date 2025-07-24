@@ -73,3 +73,23 @@ export async function toggleWishlist(productId) {
     throw new Error('Wishlist update failed');
   }
 }
+
+
+// Similar Products
+// lib/api.js
+export async function getSimilarProducts(productId) {
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/similar/${productId}/`, {
+      cache: 'no-store',
+    });
+
+    if (!res.ok) {
+      throw new Error('Failed to fetch similar products');
+    }
+
+    return await res.json();
+  } catch (error) {
+    console.error('Error fetching similar products:', error);
+    return [];
+  }
+}

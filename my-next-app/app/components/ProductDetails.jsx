@@ -9,6 +9,8 @@ import SimilarProducts from './SimilarProducts';
 import WishlistButton from './WishlistButton';
 import { getReviews, getProductRating } from '@/lib/api';
 import AddToCartButton from './AddToCartButton';
+
+
 export default function ProductDetails({ product }) {
   const [activeTab, setActiveTab] = useState('description');
   const [quantity, setQuantity] = useState(1);
@@ -186,6 +188,7 @@ const fetchRating = async () => {
 
         {/* Similar Products */}
         <SimilarProducts products={product.similar_products} />
+        <SimilarProducts productId={product.id} /> 
       </div>
     </div>
   );
