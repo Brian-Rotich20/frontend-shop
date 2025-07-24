@@ -70,14 +70,14 @@ export default function AddReviewForm({ product, refreshReviews }) {
 
   return (
     <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Write a Review</h3>
+      <h3 className="text-lg font-semibold text-orange-500 mb-4">Write a Review</h3>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-orange-500 mb-2">
             Your Review
           </label>
           <textarea
-            className="w-full p-3 border rounded-lg border-gray-300 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 transition"
+            className="w-full p-3 border rounded-lg border-gray-300 bg-white text-black placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-orange-400 transition"
             rows="4"
             placeholder="Share your experience with this product..."
             value={comment}
@@ -87,11 +87,11 @@ export default function AddReviewForm({ product, refreshReviews }) {
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">
+          <label className="block text-sm font-medium text-grey-500 mb-2">
             Rating
           </label>
           <select
-            className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-900"
+            className="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 focus:border-transparent text-orange-500"
             value={rating}
             onChange={(e) => setRating(Number(e.target.value))}
           >
@@ -105,7 +105,7 @@ export default function AddReviewForm({ product, refreshReviews }) {
 
         <button
           type="submit"
-          className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
+          className="w-full bg-orange-600 text-white py-3 px-4 rounded-lg hover:bg-orange-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors font-medium"
           disabled={loading}
         >
           {loading ? (

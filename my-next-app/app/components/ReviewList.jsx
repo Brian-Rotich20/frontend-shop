@@ -59,7 +59,7 @@ export default function ReviewList({ reviews, refreshReviews }) {
 
   return (
     <div className="space-y-4">
-      <h3 className="text-lg font-semibold text-gray-900 mb-4">Customer Reviews</h3>
+      <h3 className="text-lg font-semibold text-orange-600 mb-4">Customer Reviews</h3>
       {reviews.map((review) => {
         const isOwner = review.user === session?.user?.name || review.user === session?.user?.email;
 
