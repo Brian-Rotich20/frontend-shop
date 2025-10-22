@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     const { productId, quantity, cart_code, email } = req.body;
 
 
-    const djangoRes = await fetch('https://django-shop-drf.onrender.com/add_to_cart/', {
+    const djangoRes = await fetch('https://inova-shop.onrender.com/add_to_cart/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({

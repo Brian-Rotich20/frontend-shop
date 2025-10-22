@@ -23,7 +23,7 @@ export const cartUtils = {
     try {
       const cartCode = cartUtils.getCartCode() || cartUtils.generateCartCode();
       
-      const response = await fetch('https://django-shop-drf.onrender.com/add_to_cart/', {
+      const response = await fetch('https://inova-shop.onrender.com/add_to_cart/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -54,7 +54,7 @@ export const cartUtils = {
       const cartCode = cartUtils.getCartCode();
       if (!cartCode) return { success: false, error: 'No cart found' };
 
-      const response = await fetch(`https://django-shop-drf.onrender.com/get_cart/${cartCode}`);
+      const response = await fetch(`https://inova-shop.onrender.com/get_cart/${cartCode}`);
       const data = await response.json();
 
       if (response.ok) {
@@ -73,7 +73,7 @@ export const cartUtils = {
       const cartCode = cartUtils.getCartCode();
       if (!cartCode) return { success: false, error: 'No cart found' };
 
-      const response = await fetch('https://django-shop-drf.onrender.com/update_cartitem_quantity/', {
+      const response = await fetch('https://inova-shop.onrender.com/update_cartitem_quantity/', {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -103,7 +103,7 @@ export const cartUtils = {
       const cartCode = cartUtils.getCartCode();
       if (!cartCode) return { success: false, error: 'No cart found' };
 
-      const response = await fetch(`https://django-shop-drf.onrender.com/delete_cartitem/${itemId}/`, {
+      const response = await fetch(`https://inova-shop.onrender.com/delete_cartitem/${itemId}/`, {
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
@@ -131,7 +131,7 @@ export const cartUtils = {
       const cartCode = cartUtils.getCartCode();
       if (!cartCode) return { success: false, error: 'No cart found' };
 
-      const response = await fetch(`https://django-shop-drf.onrender.com/get_cart_stat?cart_code=${cartCode}`);
+      const response = await fetch(`https://inova-shop.onrender.com/get_cart_stat?cart_code=${cartCode}`);
       const data = await response.json();
 
       if (response.ok) {
@@ -150,7 +150,7 @@ export const cartUtils = {
       const cartCode = cartUtils.getCartCode();
       if (!cartCode) return { success: false, error: 'No cart found' };
 
-      const response = await fetch(`https://django-shop-drf.onrender.com/product_in_cart?product_id=${productId}&cart_code=${cartCode}`);
+      const response = await fetch(`https://inova-shop.onrender.com/product_in_cart?product_id=${productId}&cart_code=${cartCode}`);
       const data = await response.json();
 
       if (response.ok) {

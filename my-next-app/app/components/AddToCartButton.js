@@ -22,7 +22,7 @@ export default function AddToCartButton({ productId, className = "" }) {
         ? localStorage.getItem('user_email')
         : null;
 
-      const response = await fetch('https://django-shop-drf.onrender.com/add_to_cart/', {
+      const response = await fetch('https://inova-shop.onrender.com/add_to_cart/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

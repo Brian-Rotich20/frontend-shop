@@ -12,7 +12,7 @@ export default async function handler(req, res) {
 
   try {
     // Updated URL to match Django backend
-    const response = await fetch(`https://django-shop-drf.onrender.com/get_cart/${cart_code}`);
+    const response = await fetch(`https://inova-shop.onrender.com/get_cart/${cart_code}`);
     const data = await response.json();
 
     if (!response.ok) {

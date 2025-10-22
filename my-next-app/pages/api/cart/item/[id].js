@@ -7,7 +7,7 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch(
-      `https://django-shop-drf.onrender.com/delete_cartitem/${id}/`,
+      `https://inova-shop.onrender.com/delete_cartitem/${id}/`,
       {
         method: 'DELETE'
       }

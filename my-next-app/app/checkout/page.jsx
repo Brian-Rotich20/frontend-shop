@@ -84,7 +84,7 @@ export default function CheckoutPage() {
         return;
       }
 
-      const res = await fetch(`https://django-shop-drf.onrender.com/get_cart/${cartCode}`);
+      const res = await fetch(`https://inova-shop.onrender.com/get_cart/${cartCode}`);
       const data = await res.json();
 
       if (res.ok) {

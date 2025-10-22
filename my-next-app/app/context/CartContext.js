@@ -40,7 +40,7 @@ export const CartProvider = ({ children }) => {
       return;
     }
 
-    const res = await fetch(`https://django-shop-drf.onrender.com/get_cart_stat?cart_code=${code}`);
+    const res = await fetch(`https://inova-shop.onrender.comget_cart_stat?cart_code=${code}`);
     const data = await res.json();
 
     console.log('🧮 Fetched cart count:', data);

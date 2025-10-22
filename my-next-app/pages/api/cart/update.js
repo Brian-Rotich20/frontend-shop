@@ -12,7 +12,7 @@ export default async function handler(req, res) {
 
   try {
     const response = await fetch(
-      'https://django-shop-drf.onrender.com/update_cartitem_quantity/',
+      'https://inova-shop.onrender.com/update_cartitem_quantity/',
       {
         method: 'PUT',
         headers: {
