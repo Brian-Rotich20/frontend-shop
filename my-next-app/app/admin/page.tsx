@@ -1,3 +1,4 @@
+// app/admin/page.tsx
 // dashboard overview (stats, recent activity)
 'use client';
 
@@ -123,7 +124,7 @@ export default function AdminDashboard() {
           Welcome DIGITAL ARCHITECTS!
         </h1>
         <p className="text-gray-600">
-          Here's an overview of your store performance and recent activity.
+          Here&apos;s an overview of your store performance and recent activity.
         </p>
       </div>
 
