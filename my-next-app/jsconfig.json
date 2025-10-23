@@ -22,6 +22,6 @@
     "@/*": ["./app/*"]
   }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx","app/context",".next/types/**/*.ts", "app/page.jsx", "app/layout.jsx", "app/products/[slug]/page.jsx"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx","app/context",".next/types/**/*.ts", "app/page.jsx", "app/(public)/layout.jsx", "app/products/[slug]/page.jsx", "app/layout.jsx", "app/admin/page.tsx"],
   "exclude": ["node_modules"]
 }

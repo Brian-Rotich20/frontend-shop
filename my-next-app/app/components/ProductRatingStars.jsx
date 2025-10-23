@@ -1,6 +1,6 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { getProductRating } from '@/lib/api';
+import { getProductRating } from './../lib/api';
 
 export default function ProductRatingStars({ productId }) {
   const [rating, setRating] = useState(null);
