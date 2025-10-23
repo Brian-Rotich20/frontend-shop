@@ -5,7 +5,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Bell, Home, Package, Grid, ShoppingCart, BarChart3, Settings, User } from 'lucide-react';
+import { Home, Package, Grid, ShoppingCart, BarChart3, Settings, } from 'lucide-react';
 
 export default function AdminLayout({
   children,
@@ -21,7 +21,7 @@ export default function AdminLayout({
     { name: 'Categories', href: '/admin/categories', icon: Grid },
     { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
     { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
-    { name: 'Settings', href: '/admin/settings', icon: Settings },
+  
   ];
 
   return (
