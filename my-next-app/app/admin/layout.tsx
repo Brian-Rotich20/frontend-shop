@@ -5,7 +5,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, Package, Grid, ShoppingCart, BarChart3,} from 'lucide-react';
+import { Home, Package, Grid, ShoppingCart, BarChart3, Settings} from 'lucide-react';
 
 export default function AdminLayout({
   children,
@@ -21,6 +21,7 @@ export default function AdminLayout({
     { name: 'Categories', href: '/admin/categories', icon: Grid },
     { name: 'Orders', href: '/admin/orders', icon: ShoppingCart },
     { name: 'Analytics', href: '/admin/analytics', icon: BarChart3 },
+    { name: 'Settings', href: '/admin/settings', icon: Settings },
   
   ];
 
@@ -36,21 +37,25 @@ export default function AdminLayout({
 
       {/* Sidebar */}
       <aside
-        className={`fixed top-0 left-0 z-50 h-screen w-64 bg-gray-900 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
+        className={`fixed top-0 left-0 z-50 h-screen w-64 bg-gray-800 transform transition-transform duration-300 ease-in-out lg:translate-x-0 ${
           sidebarOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
         <div className="flex flex-col h-full">
           {/* Logo */}
-          <div className="flex items-center justify-between h-16 px-6 border-b border-gray-800">
-            <h1 className="text-xl font-bold text-orange-600">Admin Panel</h1>
+          <div className="flex items-center justify-between h-16 px-6 border-b border-gray-700 bg-gray-900 rounded-lg mx-3 mt-2 shadow-sm ">
+            <div>
+              <h1 className="text-xl font-bold text-orange-600">Inova Shop</h1>
+              <h3 className="text-xs font-medium text-gray-500">Vendor Dashboard</h3>
+            </div>
             <button
               onClick={() => setSidebarOpen(false)}
-              className="lg:hidden text-gray-400 hover:text-white"
+              className="lg:hidden text-gray-500 hover:text-gray-700"
             >
               ✕
             </button>
           </div>
+
 
           {/* Navigation */}
           <nav className="flex-1 overflow-y-auto py-6 px-3">
@@ -89,7 +94,7 @@ export default function AdminLayout({
       {/* Main content area */}
       <div className="lg:ml-64">
         {/* Top header */}
-        <header className="sticky top-0 z-30 bg-white border-b border-gray-200 h-16">
+        <header className="sticky top-0 z-30 bg-gray-800 border-b border-gray-200 h-16">
           <div className="flex items-center justify-between h-full px-6">
             {/* Mobile menu button */}
             <button
@@ -114,7 +119,7 @@ export default function AdminLayout({
             {/* Right side */}
             <div className="flex items-center gap-4 ml-auto">
               {/* Notification bell */}
-              <button className="relative p-2 text-gray-600 hover:text-orange-600 transition-colors duration-200">
+              <button className="relative p-2 text-gray-100 hover:text-orange-600 transition-colors duration-200">
                 <svg
                   className="w-6 h-6"
                   fill="none"
@@ -136,7 +141,7 @@ export default function AdminLayout({
                 <div className="w-10 h-10 bg-orange-600 rounded-full flex items-center justify-center text-white font-semibold">
                   DA
                 </div>
-                <span className="hidden md:block font-medium text-gray-900">
+                <span className="hidden md:block font-medium text-gray-100">
                   Digital Architects
                 </span>
               </div>
